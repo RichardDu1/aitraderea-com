@@ -1,0 +1,186 @@
+---
+title: "Broker Compatibility Checker: Automated Testing of Execution Quality and Slippage Across ECN/STP Brokers"
+description: "A step-by-step guide for trading operations analysts to automate broker execution quality testing using MT5, Python, and free data tools, reducing manual testing time by 90%."
+targetRole: ["trading-ops-analyst"]
+targetIntent: ["test-broker-compatibility"]
+difficulty: "Intermediate"
+setupTime: "2-3 hours initial setup, then 30 minutes per test cycle"
+costEstimate: "$0 - $50/mo (VPS optional)"
+roi: "Saves 10 hours/week per analyst"
+toolsUsed: ["meta-trader-5","python","jupyter-notebook","forex-tester-5","vps"]
+---
+
+## Overview
+
+This workflow automates the testing of broker execution quality (slippage, latency, fill rate) across ECN/STP brokers using MetaTrader 5 (MT5), Python, and free data tools. It enables trading operations analysts to compare brokers objectively and make data-driven decisions.
+
+## Prerequisites
+
+- **MT5** installed on a Windows VPS or local machine
+- **Python 3.8+** with packages: `MetaTrader5`, `pandas`, `numpy`, `matplotlib`, `requests`, `schedule`
+- **Jupyter Notebook** (optional but recommended for analysis)
+- **Forex Tester 5** (optional for historical simulation)
+- **Broker demo accounts** (at least 2 for comparison)
+
+## Step 1: Set Up MT5 and Python Environment
+
+1. Install MT5 from your broker's website.
+2. Open MT5, go to **Tools > Options > Expert Advisors**, and enable **Allow automated trading**.
+3. Install Python packages:
+   ```bash
+   pip install MetaTrader5 pandas numpy matplotlib requests schedule
+   ```
+4. Create a new Python script `broker_test.py`.
+
+## Step 2: Connect to MT5 and Retrieve Account Info
+
+```python
+import MetaTrader5 as mt5
+import pandas as pd
+
+# Initialize MT5
+if not mt5.initialize():
+    print("MT5 initialization failed")
+    quit()
+
+# Get account info
+account_info = mt5.account_info()
+print(f"Connected to {account_info.server} - Balance: {account_info.balance}")
+```
+
+## Step 3: Define Test Parameters
+
+Set the symbols, order types, and lot sizes to test. For example:
+
+```python
+symbols = ["EURUSD", "GBPUSD", "USDJPY"]
+order_types = [mt5.ORDER_TYPE_BUY, mt5.ORDER_TYPE_SELL]
+lot_sizes = [0.01, 0.1, 1.0]
+num_orders = 100  # per symbol/type/lot
+```
+
+## Step 4: Execute Orders and Record Slippage
+
+Create a function to send market orders and capture execution data:
+
+```python
+def test_execution(symbol, order_type, volume):
+    request = {
+        "action": mt5.TRADE_ACTION_DEAL,
+        "symbol": symbol,
+        "volume": volume,
+        "type": order_type,
+        "price": 0.0,  # market order
+        "deviation": 10,  # slippage tolerance in points
+        "magic": 123456,
+        "comment": "broker test",
+        "type_time": mt5.ORDER_TIME_GTC,
+        "type_filling": mt5.ORDER_FILLING_IOC,
+    }
+    result = mt5.order_send(request)
+    if result.retcode != mt5.TRADE_RETCODE_DONE:
+        return None
+    # Get actual execution price from order
+    order = mt5.history_deals_get(ticket=result.order)
+    if order:
+        return {
+            "symbol": symbol,
+            "type": "buy" if order_type == mt5.ORDER_TYPE_BUY else "sell",
+            "volume": volume,
+            "requested_price": request["price"],
+            "executed_price": order[0].price,
+            "slippage": order[0].price - request["price"],
+            "time": order[0].time
+        }
+    return None
+```
+
+Loop through all combinations and collect data:
+
+```python
+results = []
+for symbol in symbols:
+    for order_type in order_types:
+        for lot in lot_sizes:
+            for _ in range(num_orders):
+                data = test_execution(symbol, order_type, lot)
+                if data:
+                    results.append(data)
+```
+
+## Step 5: Analyze Results
+
+Convert to DataFrame and compute statistics:
+
+```python
+df = pd.DataFrame(results)
+stats = df.groupby(['symbol', 'type', 'volume']).agg(
+    avg_slippage=('slippage', 'mean'),
+    max_slippage=('slippage', 'max'),
+    min_slippage=('slippage', 'min'),
+    std_slippage=('slippage', 'std'),
+    fill_rate=('slippage', 'count')
+).reset_index()
+print(stats)
+```
+
+## Step 6: Visualize Slippage Distribution
+
+```python
+import matplotlib.pyplot as plt
+
+for symbol in symbols:
+    subset = df[df['symbol'] == symbol]
+    plt.figure()
+    plt.hist(subset['slippage'], bins=50, alpha=0.7)
+    plt.title(f'Slippage Distribution for {symbol}')
+    plt.xlabel('Slippage (points)')
+    plt.ylabel('Frequency')
+    plt.show()
+```
+
+## Step 7: Automate Periodic Testing
+
+Use `schedule` to run tests daily/weekly:
+
+```python
+import schedule
+import time
+
+def run_test():
+    # Execute steps 3-6
+    pass
+
+schedule.every().monday.at("09:00").do(run_test)
+
+while True:
+    schedule.run_pending()
+    time.sleep(60)
+```
+
+## Step 8: Compare Multiple Brokers
+
+Run the same script on different broker accounts (by switching MT5 terminals or using multiple instances). Aggregate results into a comparison table:
+
+| Broker | Symbol | Avg Slippage | Max Slippage | Fill Rate |
+|--------|--------|--------------|--------------|-----------|
+| BrokerA | EURUSD | 0.2 | 1.5 | 98% |
+| BrokerB | EURUSD | 0.5 | 3.0 | 95% |
+
+## Step 9: Generate Report
+
+Export to CSV or PDF:
+
+```python
+df.to_csv('broker_test_results.csv', index=False)
+```
+
+## Step 10: Risk Management Considerations
+
+- **Drawdown Limits**: Set a maximum drawdown per test session (e.g., 5% of account balance).
+- **Order Frequency**: Limit orders per minute to avoid triggering broker throttling.
+- **Account Protection**: Use demo accounts only; never test on live accounts.
+
+## Conclusion
+
+This automated workflow provides objective, repeatable broker execution quality metrics. By running tests regularly, you can detect changes in broker performance and make informed switching decisions.

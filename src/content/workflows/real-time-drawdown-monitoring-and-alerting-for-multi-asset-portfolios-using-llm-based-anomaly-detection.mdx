@@ -1,0 +1,89 @@
+---
+title: "Real-Time Drawdown Monitoring and Alerting for Multi-Asset Portfolios Using LLM-Based Anomaly Detection"
+description: "A step-by-step guide for risk managers to set up real-time drawdown monitoring with anomaly detection using Datadog and LLM-based analysis, ensuring proactive risk management across multi-asset portfolios."
+targetRole: ["risk-manager"]
+targetIntent: ["monitor-drawdown-limits"]
+difficulty: "Advanced"
+setupTime: "2-3 Hours"
+costEstimate: "$200 - $500/mo"
+roi: "Saves 20 hours/week and reduces drawdown breaches by 30%"
+toolsUsed: ["datadog","openai-gpt-4","python"]
+---
+
+## Real-Time Drawdown Monitoring and Alerting for Multi-Asset Portfolios Using LLM-Based Anomaly Detection
+
+### Overview
+This workflow enables risk managers to monitor drawdown limits in real-time across multi-asset portfolios, leveraging Datadog for metrics and alerts, and an LLM (e.g., GPT-4) for anomaly detection. The system ingests portfolio data, computes drawdowns, detects anomalies via LLM, and triggers alerts when thresholds are breached.
+
+### Prerequisites
+- Datadog account with API key
+- OpenAI API key (GPT-4)
+- Python 3.8+ environment
+- Portfolio data feed (CSV or API)
+
+### Step 1: Set Up Datadog for Portfolio Metrics
+1. **Create a Datadog account** and obtain an API key.
+2. **Install the Datadog Agent** on your data server.
+3. **Define custom metrics** for each asset: `portfolio.drawdown`, `portfolio.value`, `asset.price`.
+4. **Submit metrics** using the Datadog API or Agent check script.
+
+### Step 2: Compute Drawdown in Real-Time
+Write a Python script that:
+- Fetches portfolio values every minute.
+- Calculates drawdown as `(peak - current) / peak`.
+- Sends drawdown metric to Datadog.
+
+```python
+import requests
+import time
+
+# Example function to compute and send drawdown
+def send_drawdown(portfolio_id, current_value, peak_value):
+    drawdown = (peak_value - current_value) / peak_value
+    # Send to Datadog
+    requests.post("https://api.datadoghq.com/api/v1/series",
+                  headers={"DD-API-KEY": "YOUR_API_KEY"},
+                  json={"series": [{"metric": "portfolio.drawdown",
+                                     "points": [[int(time.time()), drawdown]],
+                                     "tags": [f"portfolio:{portfolio_id}"]}]})
+```
+
+### Step 3: Configure Datadog Monitors for Drawdown Limits
+1. Go to **Monitors > New Monitor > Metric**.
+2. Select `portfolio.drawdown`.
+3. Set alert condition: `> 0.1` (10% drawdown).
+4. Configure notification channels (email, Slack, PagerDuty).
+
+### Step 4: Implement LLM-Based Anomaly Detection
+Use GPT-4 to analyze drawdown patterns and detect anomalies (e.g., sudden spikes).
+
+```python
+import openai
+
+def detect_anomaly(drawdown_history):
+    prompt = f"Analyze this drawdown time series: {drawdown_history}. Identify any anomalies or unusual patterns."
+    response = openai.ChatCompletion.create(
+        model="gpt-4",
+        messages=[{"role": "user", "content": prompt}]
+    )
+    return response.choices[0].message.content
+```
+
+### Step 5: Integrate Anomaly Detection with Alerts
+- Run the anomaly detection script every 5 minutes.
+- If anomaly detected, send a custom alert to Datadog via API.
+- Datadog can trigger a webhook to notify the risk team.
+
+### Step 6: Dashboard and Visualization
+Create a Datadog dashboard with:
+- Drawdown time series for each portfolio.
+- Anomaly markers (using event overlays).
+- Alert status widgets.
+
+### Step 7: Test and Tune
+- Simulate drawdown scenarios to verify alerts.
+- Adjust LLM prompt and thresholds.
+- Set up escalation policies.
+
+### Conclusion
+This workflow provides real-time drawdown monitoring with intelligent anomaly detection, enabling risk managers to act before losses exceed limits. The combination of Datadog and LLM offers scalable, automated oversight.

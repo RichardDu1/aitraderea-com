@@ -1,0 +1,62 @@
+[
+  {
+    "topic": "Automating Backtest Parameter Optimization with Genetic Algorithms and Cloud Computing",
+    "role": "algorithmic-trading-strategist",
+    "intent": "optimize-backtest-parameters",
+    "status": "completed"
+  },
+  {
+    "topic": "Real-Time Drawdown Monitoring and Alerting for Multi-Asset Portfolios Using LLM-Based Anomaly Detection",
+    "role": "risk-manager",
+    "intent": "monitor-drawdown-limits",
+    "status": "completed"
+  },
+  {
+    "topic": "Win Rate Validation Pipeline: Cross-Validation of Strategy Performance Across Different Market Regimes Using ML",
+    "role": "quantitative-analyst",
+    "intent": "validate-win-rates",
+    "status": "completed"
+  },
+  {
+    "topic": "Broker Compatibility Checker: Automated Testing of Execution Quality and Slippage Across ECN/STP Brokers",
+    "role": "trading-ops-analyst",
+    "intent": "test-broker-compatibility",
+    "status": "completed"
+  },
+  {
+    "topic": "Dynamic Position Sizing Based on Kelly Criterion and Real-Time Volatility from Options Market",
+    "role": "risk-manager",
+    "intent": "calculate-position-size",
+    "status": "completed"
+  },
+  {
+    "topic": "Multi-Timeframe Indicator Fusion: Using RNNs to Combine Signals from Different Timeframes for Entry/Exit",
+    "role": "algorithmic-trading-strategist",
+    "intent": "fuse-indicator-signals",
+    "status": "completed"
+  },
+  {
+    "topic": "Automated Strategy Survivorship Bias Detection in Backtesting Data via NLP on Corporate Actions",
+    "role": "quantitative-analyst",
+    "intent": "detect-survivorship-bias",
+    "status": "completed"
+  },
+  {
+    "topic": "LLM-Powered Trade Journal Analysis: Extracting Psychological Patterns and Behavioral Biases from Trader Logs",
+    "role": "trading-coach",
+    "intent": "analyze-trade-journal",
+    "status": "completed"
+  },
+  {
+    "topic": "Real-Time Market Regime Classification Using Unsupervised Learning on Order Book Imbalance Data",
+    "role": "algorithmic-trading-strategist",
+    "intent": "classify-market-regime",
+    "status": "completed"
+  },
+  {
+    "topic": "Automated Stop-Loss Adjustment Based on Intraday Volatility Clustering and News Sentiment",
+    "role": "risk-manager",
+    "intent": "adjust-stop-loss",
+    "status": "pending"
+  }
+]

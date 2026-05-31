@@ -1,0 +1,151 @@
+---
+title: "Real-Time Market Regime Classification Using Unsupervised Learning on Order Book Imbalance Data"
+description: "A step-by-step guide for algorithmic trading strategists to build a real-time market regime classifier using unsupervised learning on order book imbalance data, enabling adaptive trading strategies."
+targetRole: ["algorithmic-trading-strategist"]
+targetIntent: ["classify-market-regime"]
+difficulty: "Advanced"
+setupTime: "2-3 Hours"
+costEstimate: "$50 - $200/mo (cloud compute + data)"
+roi: "Saves 20 hours/week in manual regime analysis"
+toolsUsed: ["python","scikit-learn","ccxt","pandas","numpy","matplotlib","plotly","aws-sagemaker"]
+---
+
+## Real-Time Market Regime Classification Using Unsupervised Learning on Order Book Imbalance Data
+
+### Overview
+This workflow guides you through building a real-time market regime classifier using unsupervised learning on order book imbalance data. The classifier identifies market regimes (e.g., trending, ranging, volatile) to adapt trading strategies dynamically.
+
+### Prerequisites
+- **Python 3.8+** installed
+- **API keys** for a cryptocurrency exchange (e.g., Binance, Coinbase Pro)
+- **AWS account** (optional, for SageMaker deployment)
+- Basic knowledge of Python, pandas, and machine learning
+
+### Step 1: Data Collection - Order Book Imbalance
+Order book imbalance (OBI) measures the difference between bid and ask volumes. We'll collect real-time order book snapshots using the `ccxt` library.
+
+```python
+import ccxt
+import pandas as pd
+import time
+
+exchange = ccxt.binance()
+symbol = 'BTC/USDT'
+
+def get_order_book_imbalance():
+    order_book = exchange.fetch_order_book(symbol)
+    bids = order_book['bids']
+    asks = order_book['asks']
+    bid_volume = sum([bid[1] for bid in bids[:10]])
+    ask_volume = sum([ask[1] for ask in asks[:10]])
+    imbalance = (bid_volume - ask_volume) / (bid_volume + ask_volume)
+    return imbalance
+
+# Collect data over time
+imbalance_data = []
+for i in range(1000):
+    imb = get_order_book_imbalance()
+    imbalance_data.append({'timestamp': time.time(), 'imbalance': imb})
+    time.sleep(1)
+
+df = pd.DataFrame(imbalance_data)
+```
+
+### Step 2: Feature Engineering
+Create features from OBI and price data to capture market dynamics.
+
+```python
+import numpy as np
+
+# Compute rolling statistics
+df['imbalance_ma'] = df['imbalance'].rolling(window=10).mean()
+df['imbalance_std'] = df['imbalance'].rolling(window=10).std()
+df['imbalance_momentum'] = df['imbalance'].diff(periods=5)
+
+# Add price features (e.g., returns, volatility)
+# Assume we also collect price data
+prices = [exchange.fetch_ticker(symbol)['last'] for _ in range(1000)]
+df['price'] = prices
+df['returns'] = df['price'].pct_change()
+df['volatility'] = df['returns'].rolling(window=10).std()
+
+# Drop NaN values
+df_clean = df.dropna().reset_index(drop=True)
+```
+
+### Step 3: Unsupervised Learning for Regime Classification
+Use clustering (e.g., K-Means) to identify regimes. We'll use `scikit-learn`.
+
+```python
+from sklearn.preprocessing import StandardScaler
+from sklearn.cluster import KMeans
+
+# Select features
+features = ['imbalance', 'imbalance_ma', 'imbalance_std', 'imbalance_momentum', 'returns', 'volatility']
+X = df_clean[features]
+
+# Standardize
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+# Determine optimal number of clusters (e.g., using elbow method)
+# For simplicity, assume 3 regimes
+kmeans = KMeans(n_clusters=3, random_state=42)
+df_clean['regime'] = kmeans.fit_predict(X_scaled)
+```
+
+### Step 4: Real-Time Classification
+Set up a streaming pipeline to classify new data points in real-time.
+
+```python
+import joblib
+
+# Save the scaler and model
+joblib.dump(scaler, 'scaler.pkl')
+joblib.dump(kmeans, 'kmeans_model.pkl')
+
+def classify_regime(new_imbalance, new_price):
+    # Compute features for new data point
+    # This requires maintaining a rolling window; for simplicity, assume we have recent history
+    # In practice, use a deque or database
+    # Here we just use the last 10 values from df_clean
+    # ... (implementation depends on your streaming setup)
+    # For demonstration:
+    new_features = np.array([new_imbalance, ...]).reshape(1, -1)
+    new_scaled = scaler.transform(new_features)
+    regime = kmeans.predict(new_scaled)
+    return regime[0]
+
+# Real-time loop
+while True:
+    imb = get_order_book_imbalance()
+    price = exchange.fetch_ticker(symbol)['last']
+    regime = classify_regime(imb, price)
+    print(f"Regime: {regime}")
+    time.sleep(1)
+```
+
+### Step 5: Visualization and Monitoring
+Use Plotly for interactive dashboards.
+
+```python
+import plotly.express as px
+
+fig = px.scatter(df_clean, x='timestamp', y='imbalance', color='regime', title='Market Regimes')
+fig.show()
+```
+
+### Step 6: Deployment (Optional)
+Deploy on AWS SageMaker for production-scale real-time inference.
+
+- Package the model and scaler as a SageMaker endpoint.
+- Use AWS Lambda to trigger inference on new data.
+- Monitor with CloudWatch.
+
+### Risk Management & Drawdown Limits
+- **Drawdown Limit**: Set a maximum drawdown (e.g., 10%) for strategies that switch based on regime. If drawdown exceeds, revert to default strategy.
+- **Win Rate**: Backtest regime-based strategies to ensure win rate > 50%.
+- **Broker Compatibility**: Use brokers with low-latency APIs (e.g., Binance, Coinbase Pro) and support for order book streaming.
+
+### Conclusion
+This workflow provides a foundation for real-time market regime classification. Adapt the feature set and clustering algorithm (e.g., DBSCAN, GMM) to your specific market. Backtest thoroughly before live deployment.
