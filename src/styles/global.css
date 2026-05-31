@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+/* === TRUE BESPOKE REDESIGN: AI TRADE AREA ===
+   Aesthetic: Data-Driven SaaS (RankEtsy Style)
+   Vibe: Deep Navy, Neon Teal, High Trust Dashboard === */
+
+@theme {
+  --color-primary: #64FFDA; /* Neon Teal */
+  --color-primary-dark: #14B8A6;
+  --color-surface: #0A192F; /* Deep Navy Background */
+  --color-neutral: #112240; /* Lighter Navy for cards */
+  --color-border: #233554;
+  --color-muted: #8892B0;
+  --color-text: #CCD6F6; /* Light slate text */
+
+  /* Geist-like / Modern SaaS Typography */
+  --font-sans: 'Geist', 'Inter', -apple-system, system-ui, sans-serif;
+  --font-mono: 'Geist Mono', 'SFMono-Regular', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+body { 
+  font-family: var(--font-sans); 
+  color: var(--color-text); 
+  background-color: var(--color-surface); 
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4 { 
+  color: #E6F1FF; 
+  letter-spacing: -0.03em;
+  font-weight: 800;
+}
+
+a { transition: color 0.2s; }
+a:hover { color: var(--color-primary); }
+
+.glass-card {
+  background: rgba(17, 34, 64, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--color-border);
+}
