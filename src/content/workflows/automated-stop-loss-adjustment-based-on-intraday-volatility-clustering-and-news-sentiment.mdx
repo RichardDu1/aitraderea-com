@@ -1,0 +1,66 @@
+---
+title: "Automated Stop-Loss Adjustment Based on Intraday Volatility Clustering and News Sentiment"
+description: "A step-by-step guide for risk managers to automate stop-loss adjustments using real-time volatility clustering and news sentiment analysis, reducing manual oversight and improving risk-adjusted returns."
+targetRole: ["risk-manager"]
+targetIntent: ["adjust-stop-loss"]
+difficulty: "Advanced"
+setupTime: "2-3 hours"
+costEstimate: "$50 - $200/mo"
+roi: "Saves 15 hours/week and reduces drawdown by 20%"
+toolsUsed: ["tradingview","python","newsapi","oanda-api","google-cloud"]
+---
+
+## Overview
+
+This workflow enables risk managers to dynamically adjust stop-loss levels based on intraday volatility clustering (e.g., using ATR or GARCH) and real-time news sentiment. By integrating market data, news feeds, and automated execution, you can protect capital during high-volatility events while allowing trades to breathe in calm conditions.
+
+## Prerequisites
+
+- **TradingView** account (free or paid) for charting and volatility indicators.
+- **Python** environment (3.8+) with libraries: `pandas`, `numpy`, `requests`, `vaderSentiment`, `oandapy`.
+- **News API** key (e.g., NewsAPI.org or Alpha Vantage).
+- **OANDA API** credentials (or any broker with REST API).
+- **Google Cloud** account (optional, for serverless deployment).
+
+## Step 1: Set Up Volatility Clustering Detection
+
+1. In TradingView, add the **ATR (Average True Range)** indicator to your chart. Set period to 14.
+2. Create a custom Pine Script to detect volatility clusters: when ATR exceeds its 20-period moving average by 1.5x, flag as high volatility.
+3. Export the script’s alerts via webhook to your Python server.
+
+## Step 2: Build News Sentiment Pipeline
+
+1. Use **NewsAPI** to fetch headlines for your trading instruments (e.g., "EUR/USD" or "AAPL") every 5 minutes.
+2. Apply **VADER** sentiment analysis to score each headline (compound score).
+3. Aggregate scores over a 15-minute window; if average sentiment < -0.3, flag as negative news.
+
+## Step 3: Define Stop-Loss Adjustment Rules
+
+- **Normal conditions**: Stop-loss = 1.5 * ATR (14) from entry.
+- **High volatility cluster (no negative news)**: Stop-loss = 2.5 * ATR to avoid noise.
+- **Negative news (any volatility)**: Tighten stop-loss to 1.0 * ATR immediately.
+- **Both high volatility and negative news**: Exit trade (stop-loss at entry).
+
+## Step 4: Automate Execution with Python
+
+1. Write a Python script that:
+   - Listens for TradingView webhook alerts (volatility cluster).
+   - Fetches news sentiment every 5 minutes.
+   - Calculates new stop-loss level based on rules.
+   - Sends order modification to OANDA API.
+2. Deploy the script on **Google Cloud Functions** (or a VPS) for 24/7 uptime.
+
+## Step 5: Backtest and Monitor
+
+1. Use historical data to backtest the strategy. Compare drawdown and win rate with static stop-loss.
+2. Monitor live performance via TradingView alerts and a dashboard (e.g., Google Data Studio).
+
+## Risk Management Notes
+
+- Always set a maximum stop-loss distance (e.g., 5% of account) to prevent extreme slippage.
+- Test with small capital first.
+- Ensure broker API supports stop-loss modification (OANDA does).
+
+## Conclusion
+
+This automated system reduces emotional decision-making and adapts to market conditions in real time. By combining volatility clustering and news sentiment, you can achieve a more robust risk management framework.
