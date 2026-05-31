@@ -1,43 +1,36 @@
 @import "tailwindcss";
 
-/* === TRUE BESPOKE REDESIGN: AI TRADE AREA ===
-   Aesthetic: Data-Driven SaaS (RankEtsy Style)
-   Vibe: Deep Navy, Neon Teal, High Trust Dashboard === */
-
 @theme {
-  --color-primary: #64FFDA; /* Neon Teal */
-  --color-primary-dark: #14B8A6;
-  --color-surface: #0A192F; /* Deep Navy Background */
-  --color-neutral: #112240; /* Lighter Navy for cards */
-  --color-border: #233554;
-  --color-muted: #8892B0;
-  --color-text: #CCD6F6; /* Light slate text */
+  --color-primary-500: #3b82f6;
+  --color-primary-600: #2563eb;
+  --color-dark: #050505;
+  --color-card: #111111;
+  
+  --animate-blob: blob 10s infinite;
+  --animate-fade-in-up: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 
-  /* Geist-like / Modern SaaS Typography */
-  --font-sans: 'Geist', 'Inter', -apple-system, system-ui, sans-serif;
-  --font-mono: 'Geist Mono', 'SFMono-Regular', monospace;
+  @keyframes blob {
+    0% { transform: translate(0px, 0px) scale(1); opacity: 0.2; }
+    33% { transform: translate(40px, -60px) scale(1.1); opacity: 0.3; }
+    66% { transform: translate(-30px, 30px) scale(0.9); opacity: 0.1; }
+    100% { transform: translate(0px, 0px) scale(1); opacity: 0.2; }
+  }
+
+  @keyframes fadeInUp {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
 }
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
-body { 
-  font-family: var(--font-sans); 
-  color: var(--color-text); 
-  background-color: var(--color-surface); 
-  line-height: 1.6;
+@utility animation-delay-2000 {
+  animation-delay: 2s;
 }
 
-h1, h2, h3, h4 { 
-  color: #E6F1FF; 
-  letter-spacing: -0.03em;
-  font-weight: 800;
+@utility animation-delay-4000 {
+  animation-delay: 4s;
 }
 
-a { transition: color 0.2s; }
-a:hover { color: var(--color-primary); }
-
-.glass-card {
-  background: rgba(17, 34, 64, 0.7);
-  backdrop-filter: blur(10px);
-  border: 1px solid var(--color-border);
+body {
+  background-color: var(--color-dark);
+  color: #e2e8f0;
 }
