@@ -1,0 +1,61 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+
+const allReviews = await getCollection('reviews');
+const sortedReviews = allReviews.sort((a, b) => {
+  const parseYield = (y) => parseFloat(y.replace(/[^0-9.]/g, '')) || 0;
+  return parseYield(b.data.monthlyYield) - parseYield(a.data.monthlyYield);
+});
+
+const pageTitle = 'MT4/MT5 EA Leaderboard | AI Trade Area';
+const pageDescription = 'Browse our live leaderboard of deeply analyzed algorithmic trading bots and Expert Advisors.';
+---
+
+<BaseLayout
+  title={pageTitle}
+  description={pageDescription}
+  canonical="https://aitraderea.com/en/reviews/"
+>
+  <main class="max-w-7xl mx-auto px-6 pt-32 pb-24">
+    <header class="mb-16">
+      <h1 class="text-5xl font-extrabold text-[#E6F1FF] mb-6">EA Leaderboard</h1>
+      <p class="text-xl text-muted max-w-2xl">Unbiased, data-driven analysis of the algorithms running modern prop firms and funded accounts.</p>
+    </header>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {sortedReviews.length > 0 ? sortedReviews.map((ea, idx) => (
+        <a href={`/en/reviews/${ea.id.split('/').pop()}`} class="glass-card rounded-xl p-6 hover:-translate-y-1 transition-transform group border border-[#233554] hover:border-primary relative overflow-hidden">
+          {idx === 0 && <div class="absolute top-0 right-0 bg-primary text-[#0A192F] text-xs font-bold px-3 py-1 rounded-bl-lg">#1 Yield</div>}
+          
+          <div class="flex justify-between items-start mb-4">
+            <span class="text-xs font-medium px-2 py-1 rounded bg-[#112240] text-primary border border-[#233554]">
+              {ea.data.strategyType}
+            </span>
+          </div>
+          <h3 class="text-2xl font-bold mb-1 text-white group-hover:text-primary transition-colors">{ea.data.title}</h3>
+          <p class="text-xs text-muted mb-6">by {ea.data.developer}</p>
+          
+          <div class="grid grid-cols-2 gap-4 mb-4">
+            <div class="bg-[#020C1B] p-3 rounded-lg border border-[#233554]">
+              <div class="text-[10px] text-muted uppercase tracking-wider mb-1">Monthly Yield</div>
+              <div class="text-lg font-bold text-green-400">{ea.data.monthlyYield}</div>
+            </div>
+            <div class="bg-[#020C1B] p-3 rounded-lg border border-[#233554]">
+              <div class="text-[10px] text-muted uppercase tracking-wider mb-1">Max Drawdown</div>
+              <div class="text-lg font-bold text-red-400">{ea.data.maxDrawdown}</div>
+            </div>
+          </div>
+          <div class="text-xs text-muted mt-2 border-t border-[#233554] pt-4">
+            <span class="font-bold text-white">Platform:</span> {ea.data.platform} <br/>
+            <span class="font-bold text-white">Price:</span> {ea.data.price}
+          </div>
+        </a>
+      )) : (
+        <div class="col-span-3 text-center text-muted py-12 glass-card rounded-xl border border-[#233554]">
+          Awaiting MQL5 Data Sync...
+        </div>
+      )}
+    </div>
+  </main>
+</BaseLayout>

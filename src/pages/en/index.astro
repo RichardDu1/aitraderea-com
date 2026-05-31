@@ -1,5 +1,15 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const allReviews = await getCollection('reviews');
+const sortedReviews = allReviews.sort((a, b) => {
+  // Sort by highest yield or just alphabetical if missing
+  const parseYield = (y) => parseFloat(y.replace(/[^0-9.]/g, '')) || 0;
+  return parseYield(b.data.monthlyYield) - parseYield(a.data.monthlyYield);
+});
+
+const topEAs = sortedReviews.slice(0, 3);
 
 const pageTitle = 'Data-Driven MT4/MT5 EA Reviews | AI Trade Area';
 const pageDescription = 'Real-time leaderboard and verified MyFxBook tracking for the most profitable Expert Advisors.';
@@ -40,9 +50,9 @@ const pageDescription = 'Real-time leaderboard and verified MyFxBook tracking fo
           We reverse-engineer the most popular MT4/MT5 Expert Advisors, linking them to verified live MyFxBook data so you never blow another account.
         </p>
         <div class="flex gap-4">
-          <button class="px-8 py-4 bg-primary text-[#0A192F] font-bold rounded hover:bg-primary-dark transition-colors shadow-[0_0_15px_rgba(100,255,218,0.4)]">
+          <a href="/en/reviews/" class="px-8 py-4 bg-primary text-[#0A192F] font-bold rounded hover:bg-primary-dark transition-colors shadow-[0_0_15px_rgba(100,255,218,0.4)] inline-block">
             Explore Leaderboard
-          </button>
+          </a>
         </div>
       </div>
 
@@ -88,4 +98,44 @@ const pageDescription = 'Real-time leaderboard and verified MyFxBook tracking fo
     </div>
   </header>
 
+  <!-- Leaderboard Section -->
+  <section class="max-w-7xl mx-auto px-6 py-20 border-t border-[#233554]">
+    <div class="flex items-center justify-between mb-10">
+      <h2 class="text-3xl font-bold text-[#E6F1FF]">Top Performing Algorithms</h2>
+      <a href="/en/reviews/" class="text-primary hover:underline text-sm font-bold flex items-center gap-1">
+        View Full Leaderboard <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+      </a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {topEAs.length > 0 ? topEAs.map((ea, idx) => (
+        <a href={`/en/reviews/${ea.id.split('/').pop()}`} class="glass-card rounded-xl p-6 hover:-translate-y-1 transition-transform group border border-[#233554] hover:border-primary relative overflow-hidden">
+          {idx === 0 && <div class="absolute top-0 right-0 bg-primary text-[#0A192F] text-xs font-bold px-3 py-1 rounded-bl-lg">#1 Yield</div>}
+          
+          <div class="flex justify-between items-start mb-4">
+            <span class="text-xs font-medium px-2 py-1 rounded bg-[#112240] text-primary border border-[#233554]">
+              {ea.data.strategyType}
+            </span>
+          </div>
+          <h3 class="text-2xl font-bold mb-1 text-white group-hover:text-primary transition-colors">{ea.data.title}</h3>
+          <p class="text-xs text-muted mb-6">by {ea.data.developer}</p>
+          
+          <div class="grid grid-cols-2 gap-4 mb-4">
+            <div class="bg-[#020C1B] p-3 rounded-lg border border-[#233554]">
+              <div class="text-[10px] text-muted uppercase tracking-wider mb-1">Monthly Yield</div>
+              <div class="text-lg font-bold text-green-400">{ea.data.monthlyYield}</div>
+            </div>
+            <div class="bg-[#020C1B] p-3 rounded-lg border border-[#233554]">
+              <div class="text-[10px] text-muted uppercase tracking-wider mb-1">Max Drawdown</div>
+              <div class="text-lg font-bold text-red-400">{ea.data.maxDrawdown}</div>
+            </div>
+          </div>
+        </a>
+      )) : (
+        <div class="col-span-3 text-center py-12 glass-card rounded-xl border border-[#233554]">
+          <h3 class="text-xl font-bold text-muted">Awaiting MQL5 Data Sync...</h3>
+        </div>
+      )}
+    </div>
+  </section>
 </BaseLayout>
