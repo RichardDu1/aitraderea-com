@@ -1,42 +1,58 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import Hero from '../components/Hero.astro';
-import Card from '../components/Card.astro';
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
 
-const pageTitle = 'AI Trader EA — Automated Trading Systems & Expert Advisors';
-const pageDescription = 'Download and review the best MetaTrader 4/5 Expert Advisors (EAs) and AI Trading Bots.';
+const allItems = await getCollection("eas");
+const topItems = allItems.slice(0, 3);
+
+const pageTitle = "AITrader EA";
+const pageDescription = "Unbiased reviews of the most profitable algorithmic trading systems and Expert Advisors in 2026.";
 ---
 
-<BaseLayout
-  title={pageTitle}
-  description={pageDescription}
-  canonical="https://aitraderea.com/en/"
-  schema={{ type: 'WebSite', data: { description: pageDescription } }}
->
-  <Hero title="Automate Your Trading with AI EAs" subtitle="Verified MQL4/MQL5 Expert Advisors with live MyFxBook track records." />
-
-  <section class="container mx-auto px-6 py-8 animate-fade-in-up" style="animation-delay: 0.2s;">
-    <h2 class="text-xl md:text-2xl font-bold mb-10 text-white tracking-tight flex items-center gap-3">
-      <span class="w-1.5 h-6 bg-primary-500 rounded-full"></span>
-      Popular Categories
-    </h2>
-    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 auto-rows-fr">
-      <Card title="MT4 EAs" description="Best MetaTrader 4 Bots" href="/en/categories/c1/" tag="Trending" featured={true} />
-      <Card title="MT5 EAs" description="Advanced MT5 Algorithms" href="/en/categories/c2/" tag="New" />
-      <Card title="Scalping" description="High-frequency Scalpers" href="/en/categories/c3/" />
-      <Card title="Prop Firm EAs" description="EAs to pass FTMO" href="/en/categories/c4/" />
+<BaseLayout title={pageTitle} description={pageDescription} canonical="https://aitraderea.com/" schema={{ type: "WebSite", data: { description: pageDescription } }}>
+  <header class="bg-surface text-text py-32 relative overflow-hidden flex flex-col items-center text-center">
+    <div class="px-4 py-1.5 rounded-full border border-border bg-neutral text-sm font-bold mb-8 backdrop-blur-md text-green-500">
+      🔥 2026 TOP LEADERBOARD IS LIVE
     </div>
-  </section>
+    <h1 class="text-4xl md:text-6xl font-bold text-text mb-6 tracking-tight">AITrader EA</h1>
+    <p class="text-xl md:text-2xl text-muted max-w-3xl mb-12 font-medium">
+      Unbiased reviews of the most profitable algorithmic trading systems and Expert Advisors in 2026.
+    </p>
+    <div class="flex gap-4">
+      <a href="/eas/" class="bg-gradient-to-r from-green-500 to-emerald-400 text-white font-bold px-10 py-5 rounded-full hover:scale-105 transition-transform shadow-2xl">
+        View the Top List
+      </a>
+    </div>
+  </header>
 
-  <section class="container mx-auto px-6 py-16 animate-fade-in-up" style="animation-delay: 0.4s;">
-    <h2 class="text-xl md:text-2xl font-bold mb-10 text-white tracking-tight flex items-center gap-3">
-      <span class="w-1.5 h-6 bg-purple-500 rounded-full"></span>
-      Latest Updates
-    </h2>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <Card title="Top 5 Grid Trading EAs" description="Read our latest in-depth review and analysis for 2026." href="/en/reviews/1/" rating={4.9} price="Verified" />
-      <Card title="Review: Waka Waka EA" description="A comprehensive breakdown of features, pricing, and pros/cons." href="/en/reviews/2/" rating={4.7} price="Top Choice" />
-      <Card title="Best News Trading Bots" description="Everything you need to know before making a decision." href="/en/reviews/3/" rating={4.5} price="Updated" />
+  <section class="container max-w-6xl mx-auto px-6 py-24">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl md:text-5xl font-black text-text mb-4">Top 3 Recommendations</h2>
+      <p class="text-muted text-lg">The Ultimate Algorithm & EA Trading Hub</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      {topItems.length > 0 ? topItems.map((item, idx) => (
+        <a href={`/eas/${item.id}`} class="bg-neutral rounded-2xl border border-border p-8 hover:border-primary transition-colors group relative overflow-hidden shadow-xl">
+          <div class="absolute -right-10 -top-10 text-[150px] font-black text-muted opacity-10 group-hover:opacity-20 transition-colors z-0">
+            {idx + 1}
+          </div>
+          <div class="relative z-10">
+            <span class="inline-block bg-primary text-white text-xs font-black uppercase tracking-widest px-3 py-1 rounded-full mb-4">Featured</span>
+            <h3 class="text-3xl font-black text-text mb-2">{item.data.title || item.id}</h3>
+            <p class="text-muted leading-relaxed mb-6">{(item.data.description || "").substring(0, 100)}...</p>
+            <div class="text-green-500 font-bold group-hover:translate-x-2 transition-transform">Read Full Review →</div>
+          </div>
+        </a>
+      )) : (
+        <div class="col-span-3 text-center py-20 border-2 border-dashed border-border rounded-2xl text-muted font-bold">Running benchmarks...</div>
+      )}
+    </div>
+    
+    <div class="mt-16 text-center">
+      <a href="/eas/" class="inline-flex items-center gap-2 text-text font-bold px-8 py-4 rounded-full border border-border transition-colors hover:bg-neutral">
+        See All Reviews
+      </a>
     </div>
   </section>
 </BaseLayout>

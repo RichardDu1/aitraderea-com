@@ -1,36 +1,32 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary-500: #3b82f6;
-  --color-primary-600: #2563eb;
-  --color-dark: #050505;
-  --color-card: #111111;
-  
-  --animate-blob: blob 10s infinite;
-  --animate-fade-in-up: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --color-primary: #0052ff;
+  --color-primary-dark: #003fcc;
+  --font-sans: "Inter", -apple-system, sans-serif;
+}
 
-  @keyframes blob {
-    0% { transform: translate(0px, 0px) scale(1); opacity: 0.2; }
-    33% { transform: translate(40px, -60px) scale(1.1); opacity: 0.3; }
-    66% { transform: translate(-30px, 30px) scale(0.9); opacity: 0.1; }
-    100% { transform: translate(0px, 0px) scale(1); opacity: 0.2; }
+@layer base {
+  :root {
+    --color-surface: #ffffff;
+    --color-surface-glass: rgba(255, 255, 255, 0.9);
+    --color-neutral: #f4f4f4;
+    --color-muted: #5b616e;
+    --color-text: #0a0b0d;
+    --color-border: #e5e7eb;
   }
-
-  @keyframes fadeInUp {
-    0% { opacity: 0; transform: translateY(20px); }
-    100% { opacity: 1; transform: translateY(0); }
+  .dark {
+    --color-surface: #0a0b0d;
+    --color-surface-glass: rgba(10, 11, 13, 0.9);
+    --color-neutral: #141518;
+    --color-muted: #8b949e;
+    --color-text: #ffffff;
+    --color-border: rgba(255, 255, 255, 0.1);
   }
-}
-
-@utility animation-delay-2000 {
-  animation-delay: 2s;
-}
-
-@utility animation-delay-4000 {
-  animation-delay: 4s;
-}
-
-body {
-  background-color: var(--color-dark);
-  color: #e2e8f0;
+  body {
+    background-color: var(--color-surface);
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    transition: background-color 0.3s, color 0.3s;
+  }
 }

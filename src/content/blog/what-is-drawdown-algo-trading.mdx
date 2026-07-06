@@ -1,0 +1,27 @@
+---
+title: "What is Drawdown in Algorithmic Trading? (And How to Manage It)"
+description: "Understanding maximum drawdown, relative drawdown, and how to protect your capital when trading with EAs."
+author: "Editorial Team"
+publishedAt: 2026-06-05
+---
+
+Drawdown is the single most important metric in algorithmic trading—even more critical than net profit. It measures the peak-to-trough decline during a specific record period of an investment.
+
+## Maximum Drawdown vs. Relative Drawdown
+
+**Maximum Drawdown** refers to the largest absolute drop in the account balance. For example, if your account grows from $10,000 to $15,000, and then drops to $12,000, your maximum drawdown is $3,000.
+
+**Relative Drawdown** measures this drop as a percentage of the peak equity. In the example above, the relative drawdown is 20% ($3,000 / $15,000).
+
+## Why Drawdown Matters More Than Profit
+
+An Expert Advisor (EA) that generates 100% annual returns but suffers a 60% drawdown is a ticking time bomb. Most professional fund managers look for a Calmar Ratio (Annualized Return / Maximum Drawdown) of at least 2.0.
+
+## How to Reduce Drawdown in EAs
+
+1. **Implement Hard Stop Losses:** Never use grid or martingale EAs without an absolute account equity stop.
+2. **Diversify Systems:** Run multiple uncorrelated EAs on different currency pairs.
+3. **Use Proper Position Sizing:** Never risk more than 1-2% of your account per trade.
+
+Before buying any EA, always verify its live drawdown on MyFxBook. See our rigorously tested [Algo Trading Systems](/eas/) for EAs with verified low drawdowns.
+      

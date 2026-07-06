@@ -1,0 +1,66 @@
+---
+import { getCollection, render } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+export async function getStaticPaths() {
+  const items = await getCollection("eas");
+  return items.map(item => ({
+    params: { slug: item.id },
+    props: { item },
+  }));
+}
+
+const { item } = Astro.props;
+const { Content } = await render(item);
+
+const schemaData = {
+  "@context": "https://schema.org",
+  "@type": "Review",
+  "itemReviewed": { "@type": "Product", "name": item.data.title },
+  "reviewRating": { "@type": "Rating", "ratingValue": item.data.score || 9, "bestRating": 10 },
+  "author": { "@type": "Organization", "name": "AITrader EA" }
+};
+---
+
+<BaseLayout title={`${item.data.title} Review | ${item.data.score || 9}/10 | AITrader EA`} description={item.data.description} schema={{ type: "Review", data: schemaData }}>
+  <div class="bg-surface text-text min-h-screen py-24">
+    <div class="container max-w-5xl mx-auto px-6">
+      <nav class="mb-12 text-sm text-muted font-bold tracking-widest uppercase">
+        <a href="/eas/" class="hover:text-primary transition-colors">All EAs</a>
+        <span class="mx-3">/</span>
+        <span class="text-text">{item.data.title}</span>
+      </nav>
+      <header class="mb-16 relative">
+        <h1 class="text-5xl md:text-7xl font-black text-text tracking-tighter mb-6">{item.data.title}</h1>
+        <p class="text-2xl text-muted max-w-2xl font-medium leading-relaxed">{item.data.description}</p>
+      </header>
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+        <aside class="lg:col-span-4 order-2 lg:order-1">
+          <div class="bg-neutral border border-border p-8 rounded-3xl sticky top-8 shadow-xl">
+            <h3 class="text-text font-black text-xl mb-6 tracking-tight">Review Specs</h3>
+            <ul class="space-y-6">
+              <li class="border-b border-border pb-4">
+                <span class="block text-xs uppercase tracking-widest text-muted mb-1">Editor Score</span>
+                <span class="font-bold text-3xl text-green-500">{item.data.score || "9.5"}/10</span>
+              </li>
+              <li class="border-b border-border pb-4">
+                <span class="block text-xs uppercase tracking-widest text-muted mb-1">Price / Payout</span>
+                <span class="font-bold text-lg text-text">{item.data.price || "Premium"}</span>
+              </li>
+              <li class="border-b border-border pb-4">
+                <span class="block text-xs uppercase tracking-widest text-muted mb-1">Verdict</span>
+                <span class="font-bold text-lg text-text">{item.data.verdict || "Highly Recommended"}</span>
+              </li>
+            </ul>
+            <button class="w-full mt-10 bg-gradient-to-r from-green-500 to-emerald-400 text-white font-black py-4 rounded-xl hover:scale-105 transition-transform uppercase tracking-widest text-sm shadow-xl">
+              Claim Offer
+            </button>
+          </div>
+        </aside>
+        <article class="lg:col-span-8 order-1 lg:order-2 prose prose-invert prose-lg max-w-none prose-headings:text-text prose-p:text-muted prose-a:text-primary">
+          <Content />
+        </article>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

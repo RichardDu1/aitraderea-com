@@ -1,0 +1,26 @@
+---
+title: "How to Optimize EA Parameters Without Curve Fitting"
+description: "Learn how to use MT4/MT5 optimization tools correctly to find robust parameters without falling into the curve-fitting trap."
+author: "Editorial Team"
+publishedAt: 2026-05-27
+---
+
+Optimization is the process of testing thousands of parameter combinations to find the most profitable settings for an Expert Advisor. However, it is also the easiest way to deceive yourself through "curve fitting" (over-optimization).
+
+## What is Curve Fitting?
+
+Curve fitting occurs when you tune an EA's parameters so precisely to historical data that the strategy loses its predictive power. It performs perfectly in the past but fails miserably in live trading.
+
+## Best Practices for Robust Optimization
+
+### 1. In-Sample and Out-of-Sample Testing
+Never optimize over your entire dataset. Optimize your EA on a specific period (e.g., 2015-2020), which is your "In-Sample" data. Then, run a single backtest using those settings on a completely unseen period (e.g., 2021-2023), which is your "Out-of-Sample" (OOS) data. If the OOS performance collapses, the system is curve-fitted.
+
+### 2. Forward Walk Optimization
+This is an advanced technique where you continuously re-optimize the EA over a rolling window. If the EA consistently performs well in the periods immediately following optimization, it is robust.
+
+### 3. Parameter Stability
+When looking at optimization results (the 3D graph in MT4), look for a "plateau" of profitability, not an isolated "spike." If changing a moving average period from 14 to 15 turns a winning system into a loser, the parameter is unstable.
+
+Always demand verified live results, not just optimized backtests. Check our [Top EAs](/eas/) for systems that have proven forward-testing records.
+      

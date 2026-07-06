@@ -1,0 +1,29 @@
+---
+title: "How to Backtest an EA on MetaTrader 4 without Mismatch Errors"
+description: "A complete step-by-step guide to achieving 99.9% modeling quality when backtesting Expert Advisors in MT4."
+author: "Editorial Team"
+publishedAt: 2026-06-08
+---
+
+MetaTrader 4 (MT4) is the industry standard for algorithmic trading, but its default backtesting engine is notoriously flawed. If you've ever seen "Tick Mismatch Errors" or 90% modeling quality, your backtest results are likely dangerously inaccurate.
+
+In this guide, we'll show you how to achieve 99.9% modeling quality using Tick Data Suite (TDS) and Dukascopy tick data.
+
+## Why 90% Modeling Quality is Dangerous
+
+When MT4 generates a backtest using its native history center, it interpolates 1-minute data into ticks. This means the exact price movements within a 1-minute candle are "guessed" by the platform. For scalping EAs or breakout systems, this can turn a losing strategy into a holy grail in testing, leading to blown accounts in live trading.
+
+## Step 1: Download Tick Data
+
+You must bypass your broker's history center. The most reliable free source of tick data is Dukascopy. You can use tools like QuantDataManager or Tickstory to download this data.
+
+## Step 2: Export to MT4
+
+Once downloaded, the data must be formatted into MT4's proprietary `.fxt` and `.hst` files. Ensure you map the symbol correctly (e.g., EURUSD to EURUSD.ecn if your broker uses suffixes).
+
+## Step 3: Launch MT4 via Tickstory
+
+To bypass MT4's 2GB file limit and force it to read your custom tick data, you must launch the terminal directly through your tick data software.
+
+By following these steps, you will eliminate mismatch errors and test your Expert Advisors against real market conditions. For a list of EAs that actually survive 99.9% tick data backtests, check out our [Top EAs](/eas/).
+      

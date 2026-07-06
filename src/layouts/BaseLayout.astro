@@ -6,6 +6,25 @@ const { title, description, canonical, schema } = Astro.props;
 <!doctype html>
 <html lang="en" class="dark antialiased overflow-x-hidden selection:bg-primary-500/30">
   <head>
+    <script is:inline>
+      const theme = (() => {
+        if (typeof localStorage !== "undefined" && localStorage.getItem("theme")) {
+          return localStorage.getItem("theme");
+        }
+        if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+          return "dark";
+        }
+        return "light";
+      })();
+      if (theme === "light") {
+        document.documentElement.classList.remove("dark");
+      } else {
+        document.documentElement.classList.add("dark");
+      }
+      window.localStorage.setItem("theme", theme);
+    </script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <meta charset="UTF-8" />
     <meta name="description" content={description} />
     <meta name="viewport" content="width=device-width" />
@@ -28,7 +47,7 @@ const { title, description, canonical, schema } = Astro.props;
     <meta property="twitter:description" content={description} />
 
   </head>
-  <body class="relative min-h-screen bg-dark">
+  <body class="bg-surface text-text">
     <!-- Ambient Background Blobs -->
     <div class="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
       <div class="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-primary-500/20 rounded-full mix-blend-screen filter blur-[120px] animate-blob"></div>
@@ -43,8 +62,8 @@ const { title, description, canonical, schema } = Astro.props;
           {title.split('—')[0].trim()}
         </a>
         <nav class="hidden md:flex gap-8 text-sm font-medium text-slate-400">
-          <a href="/en/categories/" class="hover:text-white transition-colors">Categories</a>
-          <a href="/en/latest/" class="hover:text-white transition-colors">Latest</a>
+          
+          
         </nav>
       </div>
     </header>
@@ -53,8 +72,31 @@ const { title, description, canonical, schema } = Astro.props;
       <slot />
     </main>
     
-    <footer class="border-t border-white/5 py-12 text-center text-sm text-slate-600 bg-black/20">
-      <p>&copy; {new Date().getFullYear()} {title.split('—')[0].trim()}. All rights reserved.</p>
+    
+    <!-- Newsletter Section -->
+    <section class="border-t border-white/5 bg-black/20 py-20 mt-10">
+      <div class="container max-w-4xl mx-auto px-6 text-center">
+        <h3 class="text-3xl font-black text-text mb-4">Join the Ultimate Algo Trading Newsletter</h3>
+        <p class="text-slate-400 mb-8 text-lg">Get weekly source code, backtest reports, and VIP discounts for the most profitable Expert Advisors.</p>
+        <form class="flex flex-col sm:flex-row gap-4 max-w-2xl mx-auto" action="/api/subscribe" method="POST" id="listmonk-optin">
+          <input type="email" name="email" placeholder="Your best email address" class="flex-1 bg-dark border border-white/10 rounded-xl px-6 py-4 text-text focus:border-primary-500 outline-none" required />
+          <button type="submit" class="bg-gradient-to-r from-primary-500 to-primary-600 text-white font-bold px-8 py-4 rounded-xl hover:scale-105 transition-transform shadow-lg shadow-primary-500/20">Subscribe Now</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-white/5 py-12 bg-dark text-slate-500 text-sm leading-relaxed">
+      <div class="container mx-auto px-6 text-center">
+        <div class="flex justify-center gap-8 mb-8 font-medium">
+          <a href="/how-we-rate" class="hover:text-white transition-colors">How We Rate</a>
+          <a href="/about" class="hover:text-white transition-colors">About Us</a>
+          <a href="/privacy" class="hover:text-white transition-colors">Privacy Policy</a>
+          <a href="/terms" class="hover:text-white transition-colors">Terms of Service</a>
+        </div>
+        <p class="mb-6 max-w-5xl mx-auto text-xs opacity-60">CFTC RULE 4.41 - HYPOTHETICAL OR SIMULATED PERFORMANCE RESULTS HAVE CERTAIN LIMITATIONS. UNLIKE AN ACTUAL PERFORMANCE RECORD, SIMULATED RESULTS DO NOT REPRESENT ACTUAL TRADING. ALSO, SINCE THE TRADES HAVE NOT BEEN EXECUTED, THE RESULTS MAY HAVE UNDER-OR-OVER COMPENSATED FOR THE IMPACT, IF ANY, OF CERTAIN MARKET FACTORS, SUCH AS LACK OF LIQUIDITY. SIMULATED TRADING PROGRAMS IN GENERAL ARE ALSO SUBJECT TO THE FACT THAT THEY ARE DESIGNED WITH THE BENEFIT OF HINDSIGHT. NO REPRESENTATION IS BEING MADE THAT ANY ACCOUNT WILL OR IS LIKELY TO ACHIEVE PROFIT OR LOSSES SIMILAR TO THOSE SHOWN.</p>
+        <p>&copy; {new Date().getFullYear()} AITrader EA. All rights reserved.</p>
+      </div>
     </footer>
       <CookieBanner />
   </body>

@@ -105,258 +105,258 @@
     "topic": "Automated Broker API Integration Testing with Generative AI",
     "role": "software-engineer",
     "intent": "test-broker-apis",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "topic": "Sentiment-Driven Trade Filtering using NLP News Analysis",
     "role": "retail-trader",
     "intent": "filter-trades-by-sentiment",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "topic": "Backtest Parameter Tuning via Bayesian Optimization and LLM Suggestions",
     "role": "quantitative-developer",
     "intent": "tune-backtest-parameters",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "topic": "Automated Drawdown Recovery Strategy Generation with Reinforcement Learning",
     "role": "risk-analyst",
     "intent": "generate-recovery-strategies",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "topic": "Win Rate Consistency Analysis using Statistical Models and Automated Reporting",
     "role": "performance-analyst",
     "intent": "analyze-win-rate-consistency",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "topic": "Broker Spread and Commission Comparison with Web Scraping and Visualization",
     "role": "cost-analyst",
     "intent": "compare-broker-costs",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "topic": "Automated Risk-Reward Ratio Optimization using Genetic Algorithms",
     "role": "strategy-optimizer",
     "intent": "optimize-risk-reward",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "topic": "AI-Powered Trade Journaling and Performance Review with Speech-to-Text",
     "role": "trader",
     "intent": "automate-trade-journaling",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "topic": "Cross-Broker Execution Quality Analysis using Machine Learning",
     "role": "execution-analyst",
     "intent": "analyze-execution-quality",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "topic": "Automated Compliance Check for Trading Strategies with LLM and Regulatory Text",
     "role": "compliance-analyst",
     "intent": "check-strategy-compliance",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "topic": "Drawdown Scenario Simulation and Stress Testing with Generative Models",
     "role": "risk-manager",
     "intent": "simulate-drawdown-scenarios",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "topic": "Personalized Risk Tolerance Assessment and Strategy Suggestion via Chatbot",
     "role": "financial-advisor",
     "intent": "assess-risk-tolerance",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "topic": "Automated Backtest Data Cleaning and Anomaly Removal using Outlier Detection",
     "role": "data-scientist",
     "intent": "clean-backtest-data",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "topic": "Automating Backtest Parameter Optimization with Bayesian Hyperparameter Tuning",
     "role": "quantitative-developer",
     "intent": "optimize-backtest-parameters",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "topic": "Real-Time Drawdown Alerting with LSTM-Based Anomaly Detection",
     "role": "risk-manager",
     "intent": "monitor-drawdown-limits",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "topic": "Win Rate Prediction Using Ensemble Machine Learning on Historical Trade Data",
     "role": "trading-strategist",
     "intent": "predict-win-rate",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "topic": "Broker Compatibility Checker Using NLP on Broker Terms and API Documentation",
     "role": "compliance-officer",
     "intent": "assess-broker-compatibility",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "topic": "Automated Risk Management Strategy Generator with Reinforcement Learning",
     "role": "risk-manager",
     "intent": "generate-risk-strategies",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "topic": "Intelligent Trade Journal Analysis Using GPT-4 for Sentiment and Pattern Extraction",
     "role": "trading-psychologist",
     "intent": "analyze-trade-journals",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "topic": "Dynamic Position Sizing via Bayesian Structural Time Series Models",
     "role": "portfolio-manager",
     "intent": "optimize-position-sizing",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "topic": "Automated Backtest Report Generation with Natural Language Summaries",
     "role": "quantitative-developer",
     "intent": "generate-backtest-reports",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "topic": "Multi-Asset Correlation Analysis Using Graph Neural Networks for Portfolio Hedging",
     "role": "portfolio-manager",
     "intent": "analyze-correlations",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "topic": "Regime Detection and Strategy Switching with Hidden Markov Models",
     "role": "trading-strategist",
     "intent": "detect-market-regimes",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "topic": "Automated Slippage Estimation Using Deep Learning on Order Book Data",
     "role": "execution-analyst",
     "intent": "estimate-slippage",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "topic": "Broker Performance Benchmarking with Anomaly Detection on Execution Quality",
     "role": "compliance-officer",
     "intent": "benchmark-broker-performance",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "topic": "Personalized Risk Tolerance Profiling via Interactive ML Questionnaires",
     "role": "client-advisor",
     "intent": "profile-risk-tolerance",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "topic": "Automated Strategy Selection Using Multi-Armed Bandit Algorithms",
     "role": "trading-strategist",
     "intent": "select-trading-strategies",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "topic": "Real-Time News Sentiment Integration into Trading Rules with Fine-Tuned BERT",
     "role": "quantitative-developer",
     "intent": "integrate-news-sentiment",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "topic": "Drawdown Recovery Prediction Using Survival Analysis and Gradient Boosting",
     "role": "risk-manager",
     "intent": "predict-drawdown-recovery",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "topic": "Automated Compliance Check for EA Strategies Against Broker Restrictions Using NLP",
     "role": "compliance-officer",
     "intent": "check-ea-compliance",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "topic": "Day Trading Pattern Recognition with Convolutional Neural Networks on Price Charts",
     "role": "day-trader",
     "intent": "recognize-trading-patterns",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "topic": "Optimal Stop-Loss Placement Using Reinforcement Learning on Historical Drawdowns",
     "role": "risk-manager",
     "intent": "optimize-stop-loss",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "topic": "Automated Backtest Overfitting Detection with Randomization Tests",
     "role": "quantitative-developer",
     "intent": "detect-backtest-overfitting",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "topic": "Automated Backtest Optimization with Genetic Algorithms and AI-Driven Parameter Selection",
     "role": "algorithmic-trading-analyst",
     "intent": "optimize-backtest-parameters",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "topic": "Real-Time Drawdown Monitoring with AI Alerts and Dynamic Stop-Loss Adjustment",
     "role": "risk-manager",
     "intent": "monitor-drawdown",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "topic": "AI-Powered Broker Compatibility Check for EA Deployment Across Multiple Platforms",
     "role": "trading-system-developer",
     "intent": "check-broker-compatibility",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "topic": "Automated Win Rate Analysis with Machine Learning for Strategy Selection",
     "role": "quantitative-analyst",
     "intent": "analyze-win-rate",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "topic": "Sentiment-Driven Trade Filtering Using NLP on Financial News and Social Media",
     "role": "algorithmic-trader",
     "intent": "filter-trades-by-sentiment",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "topic": "AI-Based Slippage Prediction for Optimizing Order Execution in High-Frequency Trading",
     "role": "execution-analyst",
     "intent": "predict-slippage",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "topic": "Automated Backtest Report Generation with Natural Language Summaries and Anomaly Detection",
     "role": "trading-strategy-developer",
     "intent": "generate-backtest-report",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "topic": "Adaptive Risk Management Using Reinforcement Learning for Position Sizing",
     "role": "risk-manager",
     "intent": "adapt-position-sizing",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "topic": "Cross-Market Correlation Monitoring with AI for Diversification and Hedging Strategies",
     "role": "portfolio-manager",
     "intent": "monitor-correlations",
-    "status": "pending"
+    "status": "completed"
   },
   {
     "topic": "Automated EA Version Control and Performance Regression Testing with AI-Driven Alerts",
     "role": "trading-system-developer",
     "intent": "manage-ea-versions",
-    "status": "pending"
+    "status": "completed"
   }
 ]

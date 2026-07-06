@@ -1,0 +1,36 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const allPosts = await getCollection("blog");
+// Sort by date or id
+allPosts.sort((a, b) => {
+  const dateA = a.data.publishedAt || new Date();
+  const dateB = b.data.publishedAt || new Date();
+  return dateB.valueOf() - dateA.valueOf();
+});
+---
+
+<BaseLayout title="Algorithmic Trading Guides & Insights | AITrader EA">
+  <div class="bg-surface text-text min-h-screen py-24">
+    <div class="container max-w-6xl mx-auto px-6">
+      <h1 class="text-4xl md:text-6xl font-black mb-6">Algorithmic Trading Guides & Insights</h1>
+      <p class="text-xl text-muted mb-16 max-w-2xl">Expert insights, tutorials, and informational guides to help you make the best decisions.</p>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {allPosts.map(post => (
+          <a href={`/blog/${post.id}`} class="bg-neutral rounded-2xl border border-border p-8 hover:border-primary transition-colors shadow-lg group">
+            <div class="text-xs text-muted mb-3 font-bold uppercase tracking-widest">{post.data.author || 'Editorial Team'}</div>
+            <h3 class="text-2xl font-black text-text mb-4 group-hover:text-green-500 transition-colors">{post.data.title || post.id}</h3>
+            <p class="text-muted leading-relaxed mb-6">{(post.data.description || "").substring(0, 150)}...</p>
+            <div class="text-green-500 font-bold">Read Article →</div>
+          </a>
+        ))}
+      </div>
+      
+      {allPosts.length === 0 && (
+        <div class="text-center py-20 border-2 border-dashed border-border rounded-2xl text-muted font-bold">New articles publishing soon...</div>
+      )}
+    </div>
+  </div>
+</BaseLayout>

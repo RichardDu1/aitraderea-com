@@ -1,18 +1,17 @@
 ---
 // Header.astro — Sticky navigation with mobile hamburger menu
 const navItems = [
-  { label: 'Home', href: '/en/' },
-  { label: 'Categories', href: '/en/categories/' },
-  { label: 'Latest', href: '/en/latest/' },
-  { label: 'Compare', href: '/en/compare/' },
-  { label: 'Blog', href: '/en/blog/' },
+  { label: 'Home', href: '/' },
+  { label: 'All EAs', href: '/eas/' }
+,
+  { label: 'Blog', href: '/blog/' }
 ];
 ---
 
-<header class="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-gray-200">
+<header class="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-white/10">
   <div class="container flex items-center justify-between h-16">
     <!-- Logo -->
-    <a href="/en/" class="flex items-center gap-2 font-bold text-xl text-text no-underline">
+    <a href="/" class="flex items-center gap-2 font-bold text-xl text-text no-underline">
       <span class="text-primary">AI</span>TradeArea
     </a>
 
@@ -42,7 +41,7 @@ const navItems = [
   </div>
 
   <!-- Mobile Menu (hidden by default) -->
-  <div id="mobile-menu" class="hidden md:hidden border-t border-gray-200 bg-white">
+  <div id="mobile-menu" class="hidden md:hidden border-t border-white/10 bg-[#0a0a0a]">
     <nav class="container flex flex-col py-4 gap-3" aria-label="Mobile navigation">
       {navItems.map((item) => (
         <a
