@@ -1,0 +1,87 @@
+---
+import { getCollection, render } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+export async function getStaticPaths() {
+  const items = await getCollection("bestOfs");
+  return items.map(item => ({
+    params: { category: item.data.categorySlug },
+    props: { item },
+  }));
+}
+
+const { item } = Astro.props;
+const { Content } = await render(item);
+const d = item.data;
+
+const allItems = await getCollection("eas");
+const featured = d.featuredEas.map(slug => allItems.find(i => i.id === slug)).filter(Boolean);
+
+const getVerdictClass = (label) => {
+  if (label === 'buy') return 'verdict-buy';
+  if (label === 'wait') return 'verdict-wait';
+  return 'verdict-skip';
+};
+const getVerdictLabel = (label) => {
+  if (label === 'buy') return '✅ BUY';
+  if (label === 'wait') return '⏳ WAIT';
+  return '❌ SKIP';
+};
+---
+
+<BaseLayout title={`${d.title} | AI TraderEA`} description={d.description} canonical={`https://aitraderea.com/best/${d.categorySlug}/`}>
+  <div class="container mx-auto px-6 py-20">
+    <nav class="mb-10 text-sm text-slate-500 font-medium">
+      <a href="/best/" class="hover:text-primary transition-colors">Best Lists</a>
+      <span class="mx-2">/</span>
+      <span class="text-text">{d.title}</span>
+    </nav>
+
+    <header class="mb-12">
+      <h1 class="text-4xl md:text-6xl font-black text-text mb-4">{d.title}</h1>
+      <p class="text-slate-400 text-lg max-w-3xl">{d.description}</p>
+    </header>
+
+    <!-- Featured EAs -->
+    <div class="space-y-6 mb-16">
+      {featured.map((ea, idx) => {
+        const ed = ea.data;
+        return (
+          <a href={`/eas/${ea.id}/`} class="block bg-neutral/50 border border-border rounded-2xl p-6 hover:border-primary/30 transition-all hover:-translate-y-0.5">
+            <div class="flex items-start gap-6">
+              <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center text-3xl font-black text-primary shrink-0">
+                {idx + 1}
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-start justify-between mb-2">
+                  <h3 class="text-xl font-bold text-text group-hover:text-primary transition-colors">{ed.title}</h3>
+                  <span class="text-primary font-bold text-xl shrink-0 ml-4">{ed.score}/10</span>
+                </div>
+                <p class="text-slate-400 text-sm mb-3 line-clamp-2">{ed.description}</p>
+                <div class="flex flex-wrap gap-2">
+                  <span class="inline-block px-2 py-0.5 rounded-full text-xs font-bold uppercase {getVerdictClass(ed.verdictLabel)}">{getVerdictLabel(ed.verdictLabel)}</span>
+                  {ed.winRate && <span class="inline-block px-2 py-0.5 rounded-full bg-white/5 text-slate-300 text-xs">Win: {ed.winRate}%</span>}
+                  {ed.maxDrawdown && <span class="inline-block px-2 py-0.5 rounded-full bg-white/5 text-slate-300 text-xs">DD: {ed.maxDrawdown}</span>}
+                  {ed.monthlyReturn && <span class="inline-block px-2 py-0.5 rounded-full bg-white/5 text-green-400 text-xs">Mo: {ed.monthlyReturn}</span>}
+                  {ed.price && <span class="inline-block px-2 py-0.5 rounded-full bg-white/5 text-slate-300 text-xs">{ed.price}</span>}
+                </div>
+              </div>
+            </div>
+          </a>
+        );
+      })}
+    </div>
+
+    <!-- Content -->
+    <article class="prose prose-invert prose-lg max-w-none prose-headings:text-text prose-p:text-slate-400">
+      <Content />
+    </article>
+
+    <!-- CTA -->
+    <div class="mt-16 text-center">
+      <a href="/eas/" class="inline-flex bg-gradient-to-r from-primary to-primary-dark text-white font-bold px-10 py-5 rounded-full hover:scale-105 transition-transform shadow-2xl shadow-primary/30">
+        Browse All Expert Advisors
+      </a>
+    </div>
+  </div>
+</BaseLayout>

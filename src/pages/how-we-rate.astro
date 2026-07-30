@@ -1,27 +1,73 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
+import BaseLayout from "../layouts/BaseLayout.astro";
 ---
-<BaseLayout title="How We Rate & Review | AITrader EA">
-  <div class="container max-w-3xl mx-auto px-6 py-24 prose prose-invert prose-primary">
-    <h1>Our Rigorous Testing Methodology</h1>
-    <p>At AITrader EA, trust is our most valuable asset. Our rankings are not for sale. Here is how we ensure 100% objective, data-driven reviews.</p>
-    
-    <h2>1. Independent Acquisition</h2>
-    <p>We purchase or sign up for every service anonymously. We never use "reviewer accounts" that might receive preferential treatment or augmented statistics.</p>
-    
-    <h2>2. Live Testing & Backtesting</h2>
-    <p>Every product undergoes a minimum 30-day live test. We measure actual performance, hidden fees, customer service responsiveness, and withdrawal/payout speeds.</p>
-    
-    <h2>3. The 5-Point Scoring System</h2>
-    <ul>
-      <li><strong>Performance / Quality (30%):</strong> Does the product actually deliver on its promises?</li>
-      <li><strong>Value for Money (20%):</strong> Pricing structure compared to industry averages.</li>
-      <li><strong>Reliability (20%):</strong> Uptime, bug frequency, and stability.</li>
-      <li><strong>Customer Support (15%):</strong> Speed and helpfulness of the support team.</li>
-      <li><strong>User Experience (15%):</strong> Ease of use and onboarding.</li>
-    </ul>
-    
-    <h2>4. Continuous Monitoring</h2>
-    <p>Our reviews are never static. If a top-rated service degrades in quality, changes its terms, or fails payouts, we immediately downgrade their score and alert our newsletter subscribers.</p>
+
+<BaseLayout title="How We Rate | AI TraderEA" description="Our transparent methodology for rating MT4/MT5 Expert Advisors. AI-powered analysis, real data, and verified results." canonical="https://aitraderea.com/how-we-rate/">
+  <div class="container mx-auto px-6 py-20">
+    <h1 class="text-4xl md:text-6xl font-black text-text mb-6">How We Rate Expert Advisors</h1>
+    <p class="text-slate-400 text-lg max-w-3xl mb-12">Our scoring methodology is transparent, data-driven, and designed to give you a complete picture of each EA's performance and risk.</p>
+
+    <div class="space-y-12">
+      <!-- Scoring -->
+      <section class="bg-neutral/50 border border-border rounded-2xl p-8">
+        <h2 class="text-2xl font-bold text-text mb-4">The Scoring System</h2>
+        <p class="text-slate-400 mb-6">Each EA is scored on a 0-10 scale based on weighted analysis of the following factors:</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="bg-white/5 rounded-xl p-4">
+            <span class="block text-primary font-bold text-lg mb-1">Win Rate (20%)</span>
+            <p class="text-slate-400 text-sm">The percentage of profitable trades. Higher is better, but we also consider the risk/reward ratio.</p>
+          </div>
+          <div class="bg-white/5 rounded-xl p-4">
+            <span class="block text-primary font-bold text-lg mb-1">Max Drawdown (20%)</span>
+            <p class="text-slate-400 text-sm">The largest peak-to-trough decline. We penalize EAs with drawdowns over 20%.</p>
+          </div>
+          <div class="bg-white/5 rounded-xl p-4">
+            <span class="block text-primary font-bold text-lg mb-1">Profit Factor (15%)</span>
+            <p class="text-slate-400 text-sm">Gross profit divided by gross loss. Above 1.5 is good, above 2.0 is excellent.</p>
+          </div>
+          <div class="bg-white/5 rounded-xl p-4">
+            <span class="block text-primary font-bold text-lg mb-1">Sharpe Ratio (15%)</span>
+            <p class="text-slate-400 text-sm">Risk-adjusted return measure. Above 1.0 is good, above 2.0 is exceptional.</p>
+          </div>
+          <div class="bg-white/5 rounded-xl p-4">
+            <span class="block text-primary font-bold text-lg mb-1">Backtest vs Live Gap (15%)</span>
+            <p class="text-slate-400 text-sm">We measure the difference between backtest and live results. Larger gaps suggest curve-fitting.</p>
+          </div>
+          <div class="bg-white/5 rounded-xl p-4">
+            <span class="block text-primary font-bold text-lg mb-1">Track Record (15%)</span>
+            <p class="text-slate-400 text-sm">Longer verified track records earn higher scores. New EAs start with a ceiling of 8.5.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- AI Verdict System -->
+      <section class="bg-gradient-to-br from-primary/5 to-primary/10 border border-primary/20 rounded-2xl p-8">
+        <h2 class="text-2xl font-bold text-text mb-4">🤖 AI Verdict System</h2>
+        <p class="text-slate-400 mb-6">Our AI analyzes each EA across multiple dimensions and generates a verdict:</p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="bg-white/5 rounded-xl p-4 text-center">
+            <span class="block text-2xl mb-2">✅ BUY</span>
+            <span class="text-green-500 font-bold text-xl">8.0+ Score</span>
+            <p class="text-slate-400 text-sm mt-2">The EA passes all our tests. Low drawdown, verified track record, and realistic backtest-to-live performance.</p>
+          </div>
+          <div class="bg-white/5 rounded-xl p-4 text-center">
+            <span class="block text-2xl mb-2">⏳ WAIT</span>
+            <span class="text-yellow-500 font-bold text-xl">6.0-7.9 Score</span>
+            <p class="text-slate-400 text-sm mt-2">The EA has potential but concerns exist — high drawdown, short track record, or significant backtest-to-live gap.</p>
+          </div>
+          <div class="bg-white/5 rounded-xl p-4 text-center">
+            <span class="block text-2xl mb-2">❌ SKIP</span>
+            <span class="text-red-500 font-bold text-xl">Below 6.0</span>
+            <p class="text-slate-400 text-sm mt-2">The EA fails our criteria. High risk, over-optimized backtests, or unrecoverable drawdowns.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Transparency -->
+      <section class="bg-neutral/50 border border-border rounded-2xl p-8">
+        <h2 class="text-2xl font-bold text-text mb-4">💰 Affiliate Disclosure</h2>
+        <p class="text-slate-400">We may earn commissions when you purchase an EA through our affiliate links. This does not affect our ratings — we never accept payment for higher scores. Every EA is tested using the same criteria regardless of affiliate relationship. EAs without affiliate links are reviewed the same way.</p>
+      </section>
+    </div>
   </div>
 </BaseLayout>

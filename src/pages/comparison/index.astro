@@ -1,0 +1,79 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const allComparisons = await getCollection("comparisons");
+const allItems = await getCollection("eas");
+const topEAs = allItems.sort((a, b) => (b.data.score || 0) - (a.data.score || 0)).slice(0, 10);
+---
+
+<BaseLayout title="EA Comparisons | AI TraderEA" description="Side-by-side comparisons of MT4/MT5 Expert Advisors. Compare metrics, performance, and risk across top EAs." canonical="https://aitraderea.com/comparison/">
+  <div class="container mx-auto px-6 py-20">
+    <div class="mb-12">
+      <h1 class="text-4xl md:text-6xl font-black text-text mb-4">EA Comparisons</h1>
+      <p class="text-slate-400 text-lg max-w-2xl">Compare Expert Advisors side-by-side across 15+ metrics. Make informed decisions, not impulse buys.</p>
+    </div>
+
+    <!-- Pre-built Comparisons -->
+    {allComparisons.length > 0 && (
+      <section class="mb-20">
+        <h2 class="text-2xl font-bold text-text mb-6">Pre-Built Comparisons</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {allComparisons.map(comp => (
+            <a href={`/comparison/${comp.id}/`} class="bg-neutral/50 border border-border rounded-2xl p-6 hover:border-primary/30 transition-all hover:-translate-y-1">
+              <h3 class="text-text font-bold text-lg mb-2">{comp.data.title}</h3>
+              <p class="text-slate-400 text-sm mb-4">{comp.data.description}</p>
+              <div class="flex items-center gap-2">
+                <span class="text-xs bg-primary/10 text-primary px-3 py-1 rounded-full font-medium">{comp.data.winner || 'TBD'} ← Winner</span>
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <!-- Custom Comparison Tool -->
+    <section>
+      <h2 class="text-2xl font-bold text-text mb-6">Custom Comparison</h2>
+      <p class="text-slate-400 mb-8">Select two EAs to compare them side-by-side across all key metrics.</p>
+      
+      <div class="bg-neutral/50 border border-border rounded-2xl p-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-sm text-slate-400 font-medium mb-2">EA #1</label>
+            <select id="ea1-select" class="w-full bg-dark border border-border rounded-xl px-4 py-3 text-text focus:border-primary outline-none">
+              <option value="">Select an EA...</option>
+              {topEAs.map(ea => (
+                <option value={ea.id}>{ea.data.title} ({ea.data.score}/10)</option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm text-slate-400 font-medium mb-2">EA #2</label>
+            <select id="ea2-select" class="w-full bg-dark border border-border rounded-xl px-4 py-3 text-text focus:border-primary outline-none">
+              <option value="">Select an EA...</option>
+              {topEAs.map(ea => (
+                <option value={ea.id}>{ea.data.title} ({ea.data.score}/10)</option>
+              ))}
+            </select>
+          </div>
+        </div>
+        <button id="compare-btn" class="mt-6 bg-gradient-to-r from-primary to-primary-dark text-white font-bold px-8 py-4 rounded-xl hover:scale-105 transition-transform shadow-lg shadow-primary/20">
+          Compare →
+        </button>
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<script>
+  document.getElementById('compare-btn')?.addEventListener('click', () => {
+    const ea1 = document.getElementById('ea1-select')?.value;
+    const ea2 = document.getElementById('ea2-select')?.value;
+    if (ea1 && ea2 && ea1 !== ea2) {
+      window.location.href = `/comparison/${ea1}-vs-${ea2}/`;
+    } else {
+      alert('Please select two different EAs to compare.');
+    }
+  });
+</script>

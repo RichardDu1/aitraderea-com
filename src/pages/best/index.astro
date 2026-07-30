@@ -1,0 +1,59 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const allBestOfs = await getCollection("bestOfs");
+const allItems = await getCollection("eas");
+---
+
+<BaseLayout title="Best EA Lists | AI TraderEA" description="Curated lists of the best MT4/MT5 Expert Advisors by category. AI-powered rankings and expert picks." canonical="https://aitraderea.com/best/">
+  <div class="container mx-auto px-6 py-20">
+    <div class="mb-12">
+      <h1 class="text-4xl md:text-6xl font-black text-text mb-4">Best EA Lists</h1>
+      <p class="text-slate-400 text-lg max-w-2xl">Curated, expert-ranked lists of the best Expert Advisors for every trading style and need.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {allBestOfs.map(bestOf => (
+        <a href={`/best/${bestOf.data.categorySlug}/`} class="group bg-neutral/50 border border-border rounded-2xl p-6 hover:border-primary/30 transition-all hover:-translate-y-1">
+          <h3 class="text-text font-bold text-lg mb-2 group-hover:text-primary transition-colors">{bestOf.data.title}</h3>
+          <p class="text-slate-400 text-sm mb-4">{bestOf.data.description}</p>
+          <div class="flex items-center gap-2">
+            <span class="text-xs bg-primary/10 text-primary px-3 py-1 rounded-full font-medium">
+              {bestOf.data.featuredEas?.length || 0} EAs featured
+            </span>
+            <span class="text-primary text-sm group-hover:translate-x-1 transition-transform">→</span>
+          </div>
+        </a>
+      ))}
+    </div>
+
+    <!-- Quick Category Links -->
+    <section class="mt-20">
+      <h2 class="text-2xl font-bold text-text mb-6">Browse by Category</h2>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {[
+          { label: 'Scalpers', icon: '⚡', slug: 'scalper' },
+          { label: 'Grid Trading', icon: '🔲', slug: 'grid' },
+          { label: 'Trend Following', icon: '📈', slug: 'trend' },
+          { label: 'AI/ML EAs', icon: '🧠', slug: 'ai-ml' },
+          { label: 'Prop Challenge', icon: '🏆', slug: 'prop-challenge' },
+          { label: 'Multi-Strategy', icon: '🔄', slug: 'multi-strategy' },
+          { label: 'MT4', icon: '💻', slug: 'mt4' },
+          { label: 'MT5', icon: '🖥️', slug: 'mt5' },
+        ].map(cat => {
+          const count = cat.slug === 'mt4' ? allItems.filter(i => i.data.platform === 'mt4' || i.data.platform === 'both').length
+            : cat.slug === 'mt5' ? allItems.filter(i => i.data.platform === 'mt5' || i.data.platform === 'both').length
+            : allItems.filter(i => i.data.eaType === cat.slug).length;
+          return (
+            <a href={`/eas/?type=${cat.slug}`} class="bg-neutral/50 border border-border rounded-xl p-4 hover:border-primary/30 transition-colors text-center">
+              <span class="text-2xl block mb-1">{cat.icon}</span>
+              <span class="text-text font-bold text-sm">{cat.label}</span>
+              <span class="block text-slate-500 text-xs">{count} EAs</span>
+            </a>
+          );
+        })}
+      </div>
+    </section>
+  </div>
+</BaseLayout>

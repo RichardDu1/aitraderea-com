@@ -1,56 +1,51 @@
----
-// Footer.astro — 4-column footer with legal links
----
-
-<footer class="bg-gray-900 text-gray-300 mt-20 pt-16 pb-8">
-  <div class="container">
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+<footer class="border-t border-white/5 mt-20">
+  <div class="container mx-auto px-6 py-16">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-10">
       <!-- Brand -->
-      <div>
-        <h3 class="text-white font-bold text-lg mb-3">AI Trade Area</h3>
-        <p class="text-sm text-gray-400 leading-relaxed">
-          Discover the best AI trading tools and platforms. Honest reviews, market analysis, and expert picks.
+      <div class="md:col-span-2">
+        <a href="/" class="inline-flex items-center gap-2 font-black text-xl text-text mb-4">
+          <span class="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-primary-dark flex items-center justify-center text-white text-xs font-bold">AI</span>
+          TraderEA
+        </a>
+        <p class="text-slate-400 text-sm max-w-md leading-relaxed">
+          AI-powered MT4/MT5 Expert Advisor reviews with real data, transparent methodology, and side-by-side comparisons. No BS. Just data.
+        </p>
+        <p class="text-slate-500 text-xs mt-4">
+          Trading forex, CFDs, and other financial instruments carries significant risk.<br />
+          Past performance does not guarantee future results.
         </p>
       </div>
 
-      <!-- Categories -->
+      <!-- Navigation -->
       <div>
-        <h4 class="text-white font-semibold mb-3">Categories</h4>
-        <ul class="space-y-2 text-sm">
-          <li><a href="/categories/writing/" class="hover:text-white transition-colors">AI Writing</a></li>
-          <li><a href="/categories/image/" class="hover:text-white transition-colors">AI Image</a></li>
-          <li><a href="/categories/coding/" class="hover:text-white transition-colors">AI Coding</a></li>
-          <li><a href="/categories/productivity/" class="hover:text-white transition-colors">AI Productivity</a></li>
-        </ul>
-      </div>
-
-      <!-- Resources -->
-      <div>
-        <h4 class="text-white font-semibold mb-3">Resources</h4>
-        <ul class="space-y-2 text-sm">
-          <li><a href="/blog/" class="hover:text-white transition-colors">Blog</a></li>
-          <li><a href="/compare/" class="hover:text-white transition-colors">Compare Tools</a></li>
-          <li><a href="/latest/" class="hover:text-white transition-colors">Latest Tools</a></li>
-          <li><a href="/newsletter/" class="hover:text-white transition-colors">Newsletter</a></li>
+        <h4 class="text-text font-bold text-sm mb-4 uppercase tracking-widest">Explore</h4>
+        <ul class="space-y-3">
+          <li><a href="/eas/" class="text-slate-400 hover:text-primary text-sm transition-colors">EA Reviews</a></li>
+          <li><a href="/comparison/" class="text-slate-400 hover:text-primary text-sm transition-colors">Comparisons</a></li>
+          <li><a href="/best/" class="text-slate-400 hover:text-primary text-sm transition-colors">Best Of</a></li>
+          <li><a href="/prop-challenges/" class="text-slate-400 hover:text-primary text-sm transition-colors">Prop Challenges</a></li>
+          <li><a href="/blog/" class="text-slate-400 hover:text-primary text-sm transition-colors">Blog</a></li>
         </ul>
       </div>
 
       <!-- Company -->
       <div>
-        <h4 class="text-white font-semibold mb-3">Company</h4>
-        <ul class="space-y-2 text-sm">
-          <li><a href="/about/" class="hover:text-white transition-colors">About</a></li>
-          <li><a href="/contact/" class="hover:text-white transition-colors">Contact</a></li>
-          <li><a href="/privacy/" class="hover:text-white transition-colors">Privacy Policy</a></li>
-          <li><a href="/terms/" class="hover:text-white transition-colors">Terms of Use</a></li>
+        <h4 class="text-text font-bold text-sm mb-4 uppercase tracking-widest">Company</h4>
+        <ul class="space-y-3">
+          <li><a href="/about/" class="text-slate-400 hover:text-primary text-sm transition-colors">About</a></li>
+          <li><a href="/how-we-rate/" class="text-slate-400 hover:text-primary text-sm transition-colors">Methodology</a></li>
+          <li><a href="/privacy/" class="text-slate-400 hover:text-primary text-sm transition-colors">Privacy</a></li>
+          <li><a href="/terms/" class="text-slate-400 hover:text-primary text-sm transition-colors">Terms</a></li>
         </ul>
       </div>
     </div>
 
-    <!-- Bottom bar -->
-    <div class="border-t border-gray-700 pt-6 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-zinc-400">
-      <p>&copy; {new Date().getFullYear()} AI Trade Area. All rights reserved.</p>
-      <p>We may earn a commission from affiliate links at no extra cost to you.</p>
+    <div class="border-t border-white/5 mt-10 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <p class="text-slate-500 text-xs">© {new Date().getFullYear()} AITraderEA. All rights reserved.</p>
+      <div class="flex items-center gap-4">
+        <a href="https://twitter.com/aitraderea" target="_blank" rel="noopener noreferrer" class="text-slate-500 hover:text-primary text-sm transition-colors">𝕏 Twitter</a>
+        <a href="https://youtube.com/@aitraderea" target="_blank" rel="noopener noreferrer" class="text-slate-500 hover:text-primary text-sm transition-colors">▶ YouTube</a>
+      </div>
     </div>
   </div>
 </footer>

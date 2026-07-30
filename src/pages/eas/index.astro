@@ -3,21 +3,79 @@ import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
 const allItems = await getCollection("eas");
+const sorted = allItems.sort((a, b) => (b.data.score || 0) - (a.data.score || 0));
+
+const getVerdictClass = (label) => {
+  if (label === 'buy') return 'verdict-buy';
+  if (label === 'wait') return 'verdict-wait';
+  return 'verdict-skip';
+};
+const getVerdictLabel = (label) => {
+  if (label === 'buy') return '✅ BUY';
+  if (label === 'wait') return '⏳ WAIT';
+  return '❌ SKIP';
+};
+const getTypeIcon = (type) => {
+  const icons = { scalper: '⚡', grid: '🔲', trend: '📈', 'ai-ml': '🧠', 'prop-challenge': '🏆', martingale: '📊', hedging: '🛡️', 'multi-strategy': '🔄' };
+  return icons[type] || '🤖';
+};
 ---
 
-<BaseLayout title="All EAs | AITrader EA">
-  <div class="bg-surface text-text min-h-screen py-24">
-    <div class="container max-w-6xl mx-auto px-6">
-      <h1 class="text-4xl md:text-6xl font-black mb-16">All EAs</h1>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {allItems.map(item => (
-          <a href={`/eas/${item.id}`} class="bg-neutral rounded-2xl border border-border p-8 hover:border-primary transition-colors shadow-lg">
-            <h3 class="text-2xl font-black text-text mb-2">{item.data.title || item.id}</h3>
-            <p class="text-muted leading-relaxed mb-6">{(item.data.description || "").substring(0, 100)}...</p>
-            <div class="text-green-500 font-bold">Read Full Review →</div>
-          </a>
-        ))}
-      </div>
+<BaseLayout title="EA Leaderboard | AI Trader EA" description="Browse our complete leaderboard of MT4/MT5 Expert Advisors. Sort by score, win rate, drawdown, and more." canonical="https://aitraderea.com/eas/">
+  <div class="container mx-auto px-6 py-20">
+    <div class="mb-12">
+      <h1 class="text-4xl md:text-6xl font-black text-text mb-4">EA Leaderboard</h1>
+      <p class="text-slate-400 text-lg max-w-2xl">Every Expert Advisor we've reviewed, ranked by AI-powered analysis. Sorted by overall score.</p>
+    </div>
+
+    <!-- Sortable Table -->
+    <div class="overflow-x-auto">
+      <table class="w-full border-collapse">
+        <thead>
+          <tr class="border-b border-border">
+            <th class="text-left py-4 px-4 text-slate-400 font-semibold text-sm">#</th>
+            <th class="text-left py-4 px-4 text-slate-400 font-semibold text-sm">EA Name</th>
+            <th class="text-center py-4 px-4 text-slate-400 font-semibold text-sm">Type</th>
+            <th class="text-center py-4 px-4 text-slate-400 font-semibold text-sm">Score</th>
+            <th class="text-center py-4 px-4 text-slate-400 font-semibold text-sm">AI Verdict</th>
+            <th class="text-center py-4 px-4 text-slate-400 font-semibold text-sm">Win Rate</th>
+            <th class="text-center py-4 px-4 text-slate-400 font-semibold text-sm">Drawdown</th>
+            <th class="text-center py-4 px-4 text-slate-400 font-semibold text-sm">Profit Factor</th>
+            <th class="text-center py-4 px-4 text-slate-400 font-semibold text-sm">Monthly</th>
+            <th class="text-center py-4 px-4 text-slate-400 font-semibold text-sm">Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          {sorted.map((item, idx) => {
+            const d = item.data;
+            return (
+              <tr class="border-b border-border/50 hover:bg-neutral/30 transition-colors">
+                <td class="py-4 px-4 text-slate-500 font-bold text-sm">{idx + 1}</td>
+                <td class="py-4 px-4">
+                  <a href={`/eas/${item.id}/`} class="flex items-center gap-3">
+                    <img src={`/images/eas/${item.id}.svg`} alt={d.title} class="w-10 h-10 rounded-lg object-cover" onerror="this.src='/images/eas/default.svg'" />
+                    <span class="text-text font-bold hover:text-primary transition-colors">{d.title}</span>
+                  </a>
+                </td>
+                <td class="text-center py-4 px-4 text-slate-400 text-sm">{getTypeIcon(d.eaType)} {d.eaType}</td>
+                <td class="text-center py-4 px-4">
+                  <span class="text-primary font-bold text-lg">{d.score}/10</span>
+                </td>
+                <td class="text-center py-4 px-4">
+                  <span class="inline-block px-2 py-0.5 rounded-full text-xs font-bold uppercase {getVerdictClass(d.verdictLabel)}">
+                    {getVerdictLabel(d.verdictLabel)}
+                  </span>
+                </td>
+                <td class="text-center py-4 px-4 text-text font-bold">{d.winRate || '-'}%</td>
+                <td class="text-center py-4 px-4 text-text font-bold">{d.maxDrawdown || '-'}</td>
+                <td class="text-center py-4 px-4 text-text font-bold">{d.profitFactor || '-'}</td>
+                <td class="text-center py-4 px-4 text-green-500 font-bold">{d.monthlyReturn || '-'}</td>
+                <td class="text-center py-4 px-4 text-slate-400 text-sm">{d.price || '-'}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
     </div>
   </div>
 </BaseLayout>

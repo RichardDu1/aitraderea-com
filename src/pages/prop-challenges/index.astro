@@ -1,0 +1,81 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const allItems = await getCollection("eas");
+const propEAs = allItems
+  .filter(i => i.data.eaType === 'prop-challenge' || i.data.consistencyScore)
+  .sort((a, b) => (b.data.score || 0) - (a.data.score || 0));
+
+const getVerdictClass = (label) => {
+  if (label === 'buy') return 'verdict-buy';
+  if (label === 'wait') return 'verdict-wait';
+  return 'verdict-skip';
+};
+const getVerdictLabel = (label) => {
+  if (label === 'buy') return '✅ BUY';
+  if (label === 'wait') return '⏳ WAIT';
+  return '❌ SKIP';
+};
+---
+
+<BaseLayout title="Prop Firm Challenge EAs | AI TraderEA" description="Expert Advisors designed to pass FTMO, MFF, and other prop firm challenges. Tested for daily loss limits and drawdown constraints." canonical="https://aitraderea.com/prop-challenges/">
+  <div class="container mx-auto px-6 py-20">
+    <div class="mb-12">
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-slate-300 mb-6 backdrop-blur-sm">
+        🏆 Prop Firm Focus
+      </div>
+      <h1 class="text-4xl md:text-6xl font-black text-text mb-4">Prop Firm Challenge EAs</h1>
+      <p class="text-slate-400 text-lg max-w-3xl">Expert Advisors specifically designed or optimized for passing FTMO, MFF, and other prop firm challenges. We test for the strict risk parameters that matter: max daily loss, max drawdown, and consistency.</p>
+    </div>
+
+    {propEAs.length === 0 && (
+      <div class="text-center py-20 border-2 border-dashed border-border rounded-2xl">
+        <p class="text-slate-500 text-lg font-bold">No prop firm challenge EAs listed yet. Check back soon.</p>
+      </div>
+    )}
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {propEAs.map(item => {
+        const d = item.data;
+        return (
+          <a href={`/eas/${item.id}/`} class="group bg-neutral/50 border border-border rounded-2xl overflow-hidden hover:border-primary/30 transition-all hover:-translate-y-1">
+            <div class="p-6">
+              <div class="flex items-start justify-between mb-4">
+                <span class="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase {getVerdictClass(d.verdictLabel)}">{getVerdictLabel(d.verdictLabel)}</span>
+                <span class="text-primary font-bold text-lg">{d.score}/10</span>
+              </div>
+              <h3 class="text-text font-bold text-lg mb-2 group-hover:text-primary transition-colors">{d.title}</h3>
+              <p class="text-slate-400 text-sm mb-4 line-clamp-2">{(d.description || '').substring(0, 120)}...</p>
+              <div class="grid grid-cols-2 gap-3 text-xs">
+                {d.consistencyScore && <div><span class="text-slate-500">Consistency</span><br /><span class="text-text font-bold">{d.consistencyScore}/10</span></div>}
+                {d.maxDailyLoss && <div><span class="text-slate-500">Max Daily Loss</span><br /><span class="text-text font-bold">{d.maxDailyLoss}</span></div>}
+                {d.maxDrawdownTarget && <div><span class="text-slate-500">Max Drawdown</span><br /><span class="text-text font-bold">{d.maxDrawdownTarget}</span></div>}
+                {d.winRate && <div><span class="text-slate-500">Win Rate</span><br /><span class="text-text font-bold">{d.winRate}%</span></div>}
+              </div>
+            </div>
+          </a>
+        );
+      })}
+    </div>
+
+    <!-- Prop Firm Info -->
+    <section class="mt-20 bg-gradient-to-br from-primary/5 to-primary/10 border border-primary/20 rounded-3xl p-10">
+      <h2 class="text-2xl font-bold text-text mb-4">What Makes a Great Prop Firm Challenge EA?</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div>
+          <h3 class="text-primary font-bold mb-2">📉 Max Daily Loss Control</h3>
+          <p class="text-slate-400 text-sm">The most critical parameter. The EA must never exceed 5% daily loss. We test every EA against this hard limit.</p>
+        </div>
+        <div>
+          <h3 class="text-primary font-bold mb-2">🎯 Max Drawdown Respect</h3>
+          <p class="text-slate-400 text-sm">Total drawdown must stay under 10%. Many EAs that look good on paper fail this test in practice.</p>
+        </div>
+        <div>
+          <h3 class="text-primary font-bold mb-2">📊 Consistency Score</h3>
+          <p class="text-slate-400 text-sm">Prop firms check for consistent returns. Erratic P&L patterns get flagged. We measure consistency as a key metric.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+</BaseLayout>

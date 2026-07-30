@@ -19,45 +19,32 @@ const schemaData = {
   "headline": post.data.title,
   "description": post.data.description,
   "author": { "@type": "Person", "name": post.data.author || "Editorial Team" },
-  "publisher": { "@type": "Organization", "name": "AITrader EA" }
+  "publisher": { "@type": "Organization", "name": "AI TraderEA" }
 };
 ---
 
-<BaseLayout title={`${post.data.title} | AITrader EA`} description={post.data.description} schema={{ type: "Article", data: schemaData }}>
-  <div class="bg-surface text-text min-h-screen py-24">
-    <div class="container max-w-4xl mx-auto px-6">
-      <nav class="mb-10 text-sm text-muted font-bold tracking-widest uppercase">
+<BaseLayout title={`${post.data.title} | AI TraderEA`} description={post.data.description} schema={{ type: "Article", data: schemaData }}>
+  <div class="container mx-auto px-6 py-20">
+    <div class="max-w-4xl mx-auto">
+      <nav class="mb-10 text-sm text-slate-500 font-medium">
         <a href="/blog/" class="hover:text-primary transition-colors">Blog</a>
-        <span class="mx-3">/</span>
+        <span class="mx-2">/</span>
         <span class="text-text">{post.data.title}</span>
       </nav>
-      
-      <header class="mb-16 border-b border-white/10 pb-12">
-        <h1 class="text-4xl md:text-6xl font-black text-text tracking-tighter mb-6 leading-tight">{post.data.title}</h1>
-        <p class="text-xl text-muted font-medium leading-relaxed mb-8">{post.data.description}</p>
-        
-        <div class="flex items-center gap-4 text-sm text-slate-400 font-medium">
-          <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-primary-500 to-slate-800 border border-white/10 flex items-center justify-center text-white font-bold">
-            {(post.data.author || "E").charAt(0)}
+
+      <article>
+        <header class="mb-10">
+          <h1 class="text-4xl md:text-5xl font-black text-text mb-4 tracking-tight">{post.data.title}</h1>
+          <div class="flex flex-wrap items-center gap-4 text-sm text-slate-500">
+            {post.data.author && <span>By {post.data.author}</span>}
+            {post.data.publishedAt && <span>{new Date(post.data.publishedAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>}
           </div>
-          <div>
-            <div class="text-white">{post.data.author || "Editorial Team"}</div>
-            <div>{post.data.publishedAt ? new Date(post.data.publishedAt).toLocaleDateString() : "Just Now"}</div>
-          </div>
+        </header>
+
+        <div class="prose prose-invert prose-lg max-w-none prose-headings:text-text prose-p:text-slate-400 prose-a:text-primary">
+          <Content />
         </div>
-      </header>
-      
-      <article class="prose prose-invert prose-lg max-w-none prose-headings:text-text prose-p:text-slate-300 prose-a:text-primary prose-strong:text-white">
-        <Content />
       </article>
-      
-      <div class="mt-20 p-8 rounded-3xl bg-neutral border border-border text-center">
-        <h3 class="text-2xl font-black mb-4">Ready to take the next step?</h3>
-        <p class="text-muted mb-8">Check out our rigorously tested benchmarks and find the best fit for your needs.</p>
-        <a href="/eas/" class="bg-gradient-to-r from-primary-500 to-primary-600 text-white font-bold px-8 py-4 rounded-xl inline-block hover:scale-105 transition-transform">
-          View Top Rankings
-        </a>
-      </div>
     </div>
   </div>
 </BaseLayout>

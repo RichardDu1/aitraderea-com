@@ -8,14 +8,9 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
   site: 'https://aitraderea.com',
   integrations: [
-    sitemap({ lastmod: new Date('2026-06-01') }),
     mdx(),
+    sitemap(),
   ],
-  i18n: {
-    defaultLocale: 'en',
-    locales: ['en'],
-    routing: { prefixDefaultLocale: true },
-  },
   vite: {
     plugins: [tailwindcss()],
   },

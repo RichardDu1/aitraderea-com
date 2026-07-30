@@ -1,18 +1,64 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
+import BaseLayout from "../layouts/BaseLayout.astro";
 ---
-<BaseLayout title="About Us | AITrader EA">
-  <div class="container max-w-3xl mx-auto px-6 py-24 prose prose-invert prose-primary">
-    <h1>About Us</h1>
-    <p>Welcome to AITrader EA. We are a dedicated team of independent researchers, testers, and analysts.</p>
-    <p>Our mission is to provide transparent, unbiased, and data-driven reviews to help you make the best decisions. Every product we review undergoes rigorous backtesting and live evaluation.</p>
-    <h2>How We Review</h2>
-    <ul>
-      <li><strong>Objectivity:</strong> We do not accept paid placements for higher scores.</li>
-      <li><strong>Data-Driven:</strong> Our verdicts are based on actual performance metrics, pricing, and user feedback.</li>
-      <li><strong>Affiliate Disclosure:</strong> To keep our site free, we may earn a commission if you purchase through our links. This does not impact our editorial independence.</li>
-    </ul>
-    <h2>Contact</h2>
-    <p>For business inquiries, please contact us at admin@aitraderea.com.</p>
+
+<BaseLayout title="About | AI TraderEA" description="Learn about AITraderEA — our mission, methodology, and team. AI-powered EA reviews with real data and no BS." canonical="https://aitraderea.com/about/">
+  <div class="container mx-auto px-6 py-20">
+    <h1 class="text-4xl md:text-6xl font-black text-text mb-6">About AITraderEA</h1>
+    <p class="text-slate-400 text-lg max-w-3xl mb-12">We're on a mission to bring transparency, data, and AI-powered analysis to the Expert Advisor review space.</p>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+      <div class="space-y-6 prose prose-invert prose-lg max-w-none prose-headings:text-text prose-p:text-slate-400">
+        <h2>Our Mission</h2>
+        <p>The EA review space is broken. Most sites are either outdated, biased by affiliate commissions, or lack the technical depth to provide real analysis. We built AITraderEA to fix this.</p>
+        
+        <h2>What Makes Us Different</h2>
+        <ul>
+          <li><strong>AI-Powered Analysis</strong> — Every EA gets an automated analysis that detects curve-fitting, evaluates risk-adjusted returns, and generates a verdict.</li>
+          <li><strong>Real Data</strong> — We show backtest vs. live results side-by-side. No cherry-picked numbers.</li>
+          <li><strong>Side-by-Side Comparisons</strong> — Compare any 2 EAs across 15+ dimensions. No other site does this.</li>
+          <li><strong>Prop Firm Focus</strong> — We specialize in EAs designed for FTMO and prop firm challenges.</li>
+          <li><strong>Transparent Methodology</strong> — Every score is explained. Every metric is defined. We hide nothing.</li>
+        </ul>
+
+        <h2>Our Team</h2>
+        <p>We're a small team of algorithmic traders, data scientists, and forex enthusiasts who believe that better data leads to better trading decisions. Our backgrounds span quantitative finance, machine learning, and retail forex trading.</p>
+      </div>
+
+      <div class="space-y-6">
+        <div class="bg-neutral/50 border border-border rounded-2xl p-8">
+          <h3 class="text-text font-bold text-xl mb-4">📊 By the Numbers</h3>
+          <div class="grid grid-cols-2 gap-6">
+            <div class="text-center">
+              <span class="block text-3xl font-black text-primary">23</span>
+              <span class="text-slate-400 text-sm">EAs Reviewed</span>
+            </div>
+            <div class="text-center">
+              <span class="block text-3xl font-black text-primary">4</span>
+              <span class="text-slate-400 text-sm">Comparisons</span>
+            </div>
+            <div class="text-center">
+              <span class="block text-3xl font-black text-primary">5</span>
+              <span class="text-slate-400 text-sm">Blog Posts</span>
+            </div>
+            <div class="text-center">
+              <span class="block text-3xl font-black text-primary">3</span>
+              <span class="text-slate-400 text-sm">Best-Of Lists</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-gradient-to-br from-primary/5 to-primary/10 border border-primary/20 rounded-2xl p-8">
+          <h3 class="text-text font-bold text-xl mb-4">🔬 Our Testing Process</h3>
+          <ol class="space-y-3 text-slate-400 text-sm">
+            <li class="flex items-start gap-3"><span class="text-primary font-bold shrink-0">1.</span> Independent backtest with real tick data</li>
+            <li class="flex items-start gap-3"><span class="text-primary font-bold shrink-0">2.</span> Cross-reference with Myfxbook live results</li>
+            <li class="flex items-start gap-3"><span class="text-primary font-bold shrink-0">3.</span> AI risk analysis (Sharpe, Monte Carlo, curve-fit detection)</li>
+            <li class="flex items-start gap-3"><span class="text-primary font-bold shrink-0">4.</span> Stress testing across different market conditions</li>
+            <li class="flex items-start gap-3"><span class="text-primary font-bold shrink-0">5.</span> Final score and verdict generation</li>
+          </ol>
+        </div>
+      </div>
+    </div>
   </div>
 </BaseLayout>

@@ -2,9 +2,11 @@
 import CookieBanner from '../components/CookieBanner.astro';
 import '../styles/global.css';
 const { title, description, canonical, schema } = Astro.props;
+const currentPath = Astro.url.pathname;
 ---
+
 <!doctype html>
-<html lang="en" class="dark antialiased overflow-x-hidden selection:bg-primary-500/30">
+<html lang="en" class="dark antialiased overflow-x-hidden selection:bg-primary/30">
   <head>
     <script is:inline>
       const theme = (() => {
@@ -24,81 +26,137 @@ const { title, description, canonical, schema } = Astro.props;
       window.localStorage.setItem("theme", theme);
     </script>
 
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <meta charset="UTF-8" />
     <meta name="description" content={description} />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="canonical" href={canonical} />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>body { font-family: 'Inter', sans-serif; }</style>
     {schema && <script type="application/ld+json" set:html={JSON.stringify(schema)} />}
     <title>{title}</title>
 
-    <!-- Open Graph / Facebook -->
+    <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonical} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content={canonical} />
     <meta property="twitter:title" content={title} />
     <meta property="twitter:description" content={description} />
-
   </head>
   <body class="bg-surface text-text">
-    <!-- Ambient Background Blobs -->
+    <!-- Ambient Background -->
     <div class="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
-      <div class="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-primary-500/20 rounded-full mix-blend-screen filter blur-[120px] animate-blob"></div>
+      <div class="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-primary/20 rounded-full mix-blend-screen filter blur-[120px] animate-blob"></div>
       <div class="absolute top-[20%] right-[-10%] w-[400px] h-[400px] bg-purple-500/10 rounded-full mix-blend-screen filter blur-[100px] animate-blob animation-delay-2000"></div>
       <div class="absolute bottom-[-20%] left-[20%] w-[600px] h-[600px] bg-blue-500/10 rounded-full mix-blend-screen filter blur-[120px] animate-blob animation-delay-4000"></div>
     </div>
 
+    <!-- Header -->
     <header class="fixed top-0 w-full z-50 bg-dark/60 backdrop-blur-xl border-b border-white/5 supports-[backdrop-filter]:bg-dark/40">
       <div class="container mx-auto px-6 h-16 flex items-center justify-between">
         <a href="/" class="text-xl font-extrabold tracking-tight flex items-center gap-2">
-          <div class="w-6 h-6 rounded-lg bg-gradient-to-tr from-primary-500 to-primary-600 shadow-lg shadow-primary-500/20"></div>
-          {title.split('—')[0].trim()}
+          <div class="w-6 h-6 rounded-lg bg-gradient-to-tr from-primary to-primary-dark shadow-lg shadow-primary/20"></div>
+          <span class="text-white">AI</span><span class="text-slate-400">TraderEA</span>
         </a>
-        <nav class="hidden md:flex gap-8 text-sm font-medium text-slate-400">
-          
-          
+        <nav class="hidden md:flex items-center gap-6 text-sm font-medium">
+          <a href="/eas/" class={`${currentPath.startsWith('/eas') ? 'text-primary' : 'text-slate-400'} hover:text-white transition-colors`}>EAs</a>
+          <a href="/comparison/" class={`${currentPath.startsWith('/comparison') ? 'text-primary' : 'text-slate-400'} hover:text-white transition-colors`}>Comparisons</a>
+          <a href="/best/" class={`${currentPath.startsWith('/best') ? 'text-primary' : 'text-slate-400'} hover:text-white transition-colors`}>Best Of</a>
+          <a href="/prop-challenges/" class={`${currentPath.startsWith('/prop-challenges') ? 'text-primary' : 'text-slate-400'} hover:text-white transition-colors`}>Prop Challenges</a>
+          <a href="/blog/" class={`${currentPath.startsWith('/blog') ? 'text-primary' : 'text-slate-400'} hover:text-white transition-colors`}>Blog</a>
+          <a href="/about/" class={`${currentPath.startsWith('/about') ? 'text-primary' : 'text-slate-400'} hover:text-white transition-colors`}>About</a>
+        </nav>
+        <!-- Mobile Hamburger -->
+        <button id="menu-toggle" class="md:hidden p-2 text-text" aria-label="Toggle menu" aria-expanded="false">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+      <!-- Mobile Menu -->
+      <div id="mobile-menu" class="hidden md:hidden border-t border-white/5 bg-dark">
+        <nav class="container mx-auto px-6 flex flex-col py-4 gap-3">
+          <a href="/eas/" class="text-sm font-medium text-slate-400 hover:text-white transition-colors py-1">EAs</a>
+          <a href="/comparison/" class="text-sm font-medium text-slate-400 hover:text-white transition-colors py-1">Comparisons</a>
+          <a href="/best/" class="text-sm font-medium text-slate-400 hover:text-white transition-colors py-1">Best Of</a>
+          <a href="/prop-challenges/" class="text-sm font-medium text-slate-400 hover:text-white transition-colors py-1">Prop Challenges</a>
+          <a href="/blog/" class="text-sm font-medium text-slate-400 hover:text-white transition-colors py-1">Blog</a>
+          <a href="/about/" class="text-sm font-medium text-slate-400 hover:text-white transition-colors py-1">About</a>
         </nav>
       </div>
     </header>
-    
-    <main class="pt-24 pb-16">
+
+    <main class="pt-16">
       <slot />
     </main>
-    
-    
+
     <!-- Newsletter Section -->
     <section class="border-t border-white/5 bg-black/20 py-20 mt-10">
       <div class="container max-w-4xl mx-auto px-6 text-center">
-        <h3 class="text-3xl font-black text-text mb-4">Join the Ultimate Algo Trading Newsletter</h3>
-        <p class="text-slate-400 mb-8 text-lg">Get weekly source code, backtest reports, and VIP discounts for the most profitable Expert Advisors.</p>
+        <h3 class="text-3xl font-black text-text mb-4">Get Weekly EA Performance Reports</h3>
+        <p class="text-slate-400 mb-8 text-lg">New reviews, backtest data, and AI verdicts delivered to your inbox every Monday.</p>
         <form class="flex flex-col sm:flex-row gap-4 max-w-2xl mx-auto" action="/api/subscribe" method="POST" id="listmonk-optin">
-          <input type="email" name="email" placeholder="Your best email address" class="flex-1 bg-dark border border-white/10 rounded-xl px-6 py-4 text-text focus:border-primary-500 outline-none" required />
-          <button type="submit" class="bg-gradient-to-r from-primary-500 to-primary-600 text-white font-bold px-8 py-4 rounded-xl hover:scale-105 transition-transform shadow-lg shadow-primary-500/20">Subscribe Now</button>
+          <input type="email" name="email" placeholder="Your best email address" class="flex-1 bg-dark border border-white/10 rounded-xl px-6 py-4 text-text focus:border-primary outline-none" required />
+          <button type="submit" class="bg-gradient-to-r from-primary to-primary-dark text-white font-bold px-8 py-4 rounded-xl hover:scale-105 transition-transform shadow-lg shadow-primary/20">Subscribe Now</button>
         </form>
       </div>
     </section>
 
     <!-- Footer -->
     <footer class="border-t border-white/5 py-12 bg-dark text-slate-500 text-sm leading-relaxed">
-      <div class="container mx-auto px-6 text-center">
-        <div class="flex justify-center gap-8 mb-8 font-medium">
-          <a href="/how-we-rate" class="hover:text-white transition-colors">How We Rate</a>
-          <a href="/about" class="hover:text-white transition-colors">About Us</a>
-          <a href="/privacy" class="hover:text-white transition-colors">Privacy Policy</a>
-          <a href="/terms" class="hover:text-white transition-colors">Terms of Service</a>
+      <div class="container mx-auto px-6">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12 text-left">
+          <div>
+            <h4 class="text-white font-bold mb-4">AITraderEA</h4>
+            <p class="text-xs leading-relaxed">AI-powered EA reviews with real data. No BS. We test, verify, and rank MT4/MT5 Expert Advisors so you don't have to gamble on marketing hype.</p>
+          </div>
+          <div>
+            <h4 class="text-white font-semibold mb-4">Reviews</h4>
+            <ul class="space-y-2">
+              <li><a href="/eas/" class="hover:text-white transition-colors">All EAs</a></li>
+              <li><a href="/comparison/" class="hover:text-white transition-colors">Comparisons</a></li>
+              <li><a href="/best/best-mt4-eas/" class="hover:text-white transition-colors">Best MT4 EAs</a></li>
+              <li><a href="/best/best-ai-eas/" class="hover:text-white transition-colors">Best AI EAs</a></li>
+              <li><a href="/prop-challenges/" class="hover:text-white transition-colors">Prop Challenges</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="text-white font-semibold mb-4">Resources</h4>
+            <ul class="space-y-2">
+              <li><a href="/blog/" class="hover:text-white transition-colors">Blog</a></li>
+              <li><a href="/how-we-rate/" class="hover:text-white transition-colors">How We Rate</a></li>
+              <li><a href="/newsletter/" class="hover:text-white transition-colors">Newsletter</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="text-white font-semibold mb-4">Company</h4>
+            <ul class="space-y-2">
+              <li><a href="/about/" class="hover:text-white transition-colors">About</a></li>
+              <li><a href="/contact/" class="hover:text-white transition-colors">Contact</a></li>
+              <li><a href="/privacy/" class="hover:text-white transition-colors">Privacy</a></li>
+              <li><a href="/terms/" class="hover:text-white transition-colors">Terms</a></li>
+            </ul>
+          </div>
         </div>
-        <p class="mb-6 max-w-5xl mx-auto text-xs opacity-60">CFTC RULE 4.41 - HYPOTHETICAL OR SIMULATED PERFORMANCE RESULTS HAVE CERTAIN LIMITATIONS. UNLIKE AN ACTUAL PERFORMANCE RECORD, SIMULATED RESULTS DO NOT REPRESENT ACTUAL TRADING. ALSO, SINCE THE TRADES HAVE NOT BEEN EXECUTED, THE RESULTS MAY HAVE UNDER-OR-OVER COMPENSATED FOR THE IMPACT, IF ANY, OF CERTAIN MARKET FACTORS, SUCH AS LACK OF LIQUIDITY. SIMULATED TRADING PROGRAMS IN GENERAL ARE ALSO SUBJECT TO THE FACT THAT THEY ARE DESIGNED WITH THE BENEFIT OF HINDSIGHT. NO REPRESENTATION IS BEING MADE THAT ANY ACCOUNT WILL OR IS LIKELY TO ACHIEVE PROFIT OR LOSSES SIMILAR TO THOSE SHOWN.</p>
-        <p>&copy; {new Date().getFullYear()} AITrader EA. All rights reserved.</p>
+        <div class="border-t border-white/5 pt-6 text-center">
+          <p class="mb-6 text-xs opacity-60 max-w-5xl mx-auto">CFTC RULE 4.41 - HYPOTHETICAL OR SIMULATED PERFORMANCE RESULTS HAVE CERTAIN LIMITATIONS. UNLIKE AN ACTUAL PERFORMANCE RECORD, SIMULATED RESULTS DO NOT REPRESENT ACTUAL TRADING. ALSO, SINCE THE TRADES HAVE NOT BEEN EXECUTED, THE RESULTS MAY HAVE UNDER-OR-OVER COMPENSATED FOR THE IMPACT, IF ANY, OF CERTAIN MARKET FACTORS, SUCH AS LACK OF LIQUIDITY. SIMULATED TRADING PROGRAMS IN GENERAL ARE ALSO SUBJECT TO THE FACT THAT THEY ARE DESIGNED WITH THE BENEFIT OF HINDSIGHT. NO REPRESENTATION IS BEING MADE THAT ANY ACCOUNT WILL OR IS LIKELY TO ACHIEVE PROFIT OR LOSSES SIMILAR TO THOSE SHOWN.</p>
+          <p>&copy; {new Date().getFullYear()} AITraderEA. All rights reserved. We may earn commissions from affiliate links.</p>
+        </div>
       </div>
     </footer>
-      <CookieBanner />
+    <CookieBanner />
   </body>
 </html>
 
+<script>
+  const toggle = document.getElementById('menu-toggle');
+  const menu = document.getElementById('mobile-menu');
+  toggle?.addEventListener('click', () => {
+    const expanded = toggle.getAttribute('aria-expanded') === 'true';
+    toggle.setAttribute('aria-expanded', String(!expanded));
+    menu?.classList.toggle('hidden');
+  });
+</script>

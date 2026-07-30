@@ -12,55 +12,225 @@ export async function getStaticPaths() {
 
 const { item } = Astro.props;
 const { Content } = await render(item);
+const d = item.data;
+
+const allItems = await getCollection("eas");
+const similarEAs = allItems
+  .filter(i => i.id !== item.id && i.data.eaType === d.eaType)
+  .sort((a, b) => (b.data.score || 0) - (a.data.score || 0))
+  .slice(0, 3);
+
+const getVerdictClass = (label) => {
+  if (label === 'buy') return 'verdict-buy';
+  if (label === 'wait') return 'verdict-wait';
+  return 'verdict-skip';
+};
+const getVerdictLabel = (label) => {
+  if (label === 'buy') return '✅ BUY';
+  if (label === 'wait') return '⏳ WAIT';
+  return '❌ SKIP';
+};
 
 const schemaData = {
   "@context": "https://schema.org",
   "@type": "Review",
-  "itemReviewed": { "@type": "Product", "name": item.data.title },
-  "reviewRating": { "@type": "Rating", "ratingValue": item.data.score || 9, "bestRating": 10 },
-  "author": { "@type": "Organization", "name": "AITrader EA" }
+  "itemReviewed": { "@type": "Product", "name": d.title },
+  "reviewRating": { "@type": "Rating", "ratingValue": d.score || 9, "bestRating": 10 },
+  "author": { "@type": "Organization", "name": "AITraderEA" }
 };
 ---
 
-<BaseLayout title={`${item.data.title} Review | ${item.data.score || 9}/10 | AITrader EA`} description={item.data.description} schema={{ type: "Review", data: schemaData }}>
-  <div class="bg-surface text-text min-h-screen py-24">
-    <div class="container max-w-5xl mx-auto px-6">
-      <nav class="mb-12 text-sm text-muted font-bold tracking-widest uppercase">
-        <a href="/eas/" class="hover:text-primary transition-colors">All EAs</a>
-        <span class="mx-3">/</span>
-        <span class="text-text">{item.data.title}</span>
-      </nav>
-      <header class="mb-16 relative">
-        <h1 class="text-5xl md:text-7xl font-black text-text tracking-tighter mb-6">{item.data.title}</h1>
-        <p class="text-2xl text-muted max-w-2xl font-medium leading-relaxed">{item.data.description}</p>
-      </header>
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
-        <aside class="lg:col-span-4 order-2 lg:order-1">
-          <div class="bg-neutral border border-border p-8 rounded-3xl sticky top-8 shadow-xl">
-            <h3 class="text-text font-black text-xl mb-6 tracking-tight">Review Specs</h3>
-            <ul class="space-y-6">
-              <li class="border-b border-border pb-4">
-                <span class="block text-xs uppercase tracking-widest text-muted mb-1">Editor Score</span>
-                <span class="font-bold text-3xl text-green-500">{item.data.score || "9.5"}/10</span>
-              </li>
-              <li class="border-b border-border pb-4">
-                <span class="block text-xs uppercase tracking-widest text-muted mb-1">Price / Payout</span>
-                <span class="font-bold text-lg text-text">{item.data.price || "Premium"}</span>
-              </li>
-              <li class="border-b border-border pb-4">
-                <span class="block text-xs uppercase tracking-widest text-muted mb-1">Verdict</span>
-                <span class="font-bold text-lg text-text">{item.data.verdict || "Highly Recommended"}</span>
-              </li>
-            </ul>
-            <button class="w-full mt-10 bg-gradient-to-r from-green-500 to-emerald-400 text-white font-black py-4 rounded-xl hover:scale-105 transition-transform uppercase tracking-widest text-sm shadow-xl">
-              Claim Offer
-            </button>
+<BaseLayout title={`${d.title} Review | ${d.score || 9}/10 | AITraderEA`} description={d.description} schema={{ type: "Review", data: schemaData }}>
+  <div class="container mx-auto px-6 py-20">
+    <!-- Breadcrumb -->
+    <nav class="mb-10 text-sm text-slate-500 font-medium">
+      <a href="/eas/" class="hover:text-primary transition-colors">EA Leaderboard</a>
+      <span class="mx-2">/</span>
+      <span class="text-text">{d.title}</span>
+    </nav>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+      <!-- Main Content -->
+      <div class="lg:col-span-8 order-2 lg:order-1">
+        <!-- Header -->
+        <header class="mb-10">
+          <div class="flex items-start gap-6 mb-6">
+            <img src={`/images/eas/${item.id}.svg`} alt={d.title} class="w-24 h-24 rounded-2xl object-cover shrink-0" onerror="this.src='/images/eas/default.svg'" />
+            <div>
+              <h1 class="text-3xl md:text-5xl font-black text-text tracking-tight mb-2">{d.title}</h1>
+              <p class="text-slate-400 text-lg leading-relaxed">{d.description}</p>
+            </div>
           </div>
-        </aside>
-        <article class="lg:col-span-8 order-1 lg:order-2 prose prose-invert prose-lg max-w-none prose-headings:text-text prose-p:text-muted prose-a:text-primary">
+          <div class="flex flex-wrap gap-3">
+            <span class="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase {getVerdictClass(d.verdictLabel)}">{getVerdictLabel(d.verdictLabel)}</span>
+            <span class="inline-block px-3 py-1 rounded-full bg-white/5 text-slate-300 text-xs font-medium border border-white/10">{d.eaType?.replace('-', ' ').toUpperCase()}</span>
+            <span class="inline-block px-3 py-1 rounded-full bg-white/5 text-slate-300 text-xs font-medium border border-white/10">{d.platform?.toUpperCase()}</span>
+            {d.category && <span class="inline-block px-3 py-1 rounded-full bg-white/5 text-slate-300 text-xs font-medium border border-white/10">{d.category}</span>}
+          </div>
+        </header>
+
+        <!-- AI Verdict Box -->
+        <div class="bg-gradient-to-br from-primary/5 to-primary/10 border border-primary/20 rounded-2xl p-8 mb-10">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="text-2xl">🤖</span>
+            <h2 class="text-xl font-bold text-text">AI Verdict</h2>
+          </div>
+          <div class="flex items-center gap-4 mb-4">
+            <span class="text-4xl font-black text-primary">{d.score}/10</span>
+            <span class="inline-block px-4 py-1.5 rounded-full text-sm font-bold uppercase {getVerdictClass(d.verdictLabel)}">{getVerdictLabel(d.verdictLabel)}</span>
+          </div>
+          <p class="text-slate-400">{d.bottomLine}</p>
+        </div>
+
+        <!-- Backtest vs Live Comparison -->
+        {(d.backtestWinRate || d.liveWinRate) && (
+          <div class="bg-neutral/50 border border-border rounded-2xl p-8 mb-10">
+            <h2 class="text-xl font-bold text-text mb-6">Backtest vs. Live Results</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {d.backtestWinRate && d.liveWinRate && (
+                <div class="text-center p-4 bg-white/5 rounded-xl">
+                  <span class="block text-xs uppercase tracking-widest text-slate-500 mb-2">Win Rate</span>
+                  <div class="flex justify-center gap-6">
+                    <div><span class="block text-sm text-slate-400">Backtest</span><span class="block text-2xl font-bold text-primary">{d.backtestWinRate}%</span></div>
+                    <div><span class="block text-sm text-slate-400">Live</span><span class="block text-2xl font-bold text-green-500">{d.liveWinRate}%</span></div>
+                  </div>
+                </div>
+              )}
+              {d.backtestMonthlyReturn && d.liveMonthlyReturn && (
+                <div class="text-center p-4 bg-white/5 rounded-xl">
+                  <span class="block text-xs uppercase tracking-widest text-slate-500 mb-2">Monthly Return</span>
+                  <div class="flex justify-center gap-6">
+                    <div><span class="block text-sm text-slate-400">Backtest</span><span class="block text-2xl font-bold text-primary">{d.backtestMonthlyReturn}</span></div>
+                    <div><span class="block text-sm text-slate-400">Live</span><span class="block text-2xl font-bold text-green-500">{d.liveMonthlyReturn}</span></div>
+                  </div>
+                </div>
+              )}
+              {d.backtestMaxDrawdown && d.liveMaxDrawdown && (
+                <div class="text-center p-4 bg-white/5 rounded-xl">
+                  <span class="block text-xs uppercase tracking-widest text-slate-500 mb-2">Max Drawdown</span>
+                  <div class="flex justify-center gap-6">
+                    <div><span class="block text-sm text-slate-400">Backtest</span><span class="block text-2xl font-bold text-primary">{d.backtestMaxDrawdown}</span></div>
+                    <div><span class="block text-sm text-slate-400">Live</span><span class="block text-2xl font-bold text-red-500">{d.liveMaxDrawdown}</span></div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        <!-- Article Content -->
+        <article class="prose prose-invert prose-lg max-w-none prose-headings:text-text prose-p:text-slate-400 prose-a:text-primary">
           <Content />
         </article>
       </div>
+
+      <!-- Sidebar -->
+      <aside class="lg:col-span-4 order-1 lg:order-2">
+        <div class="sticky top-24 space-y-6">
+          <!-- Score Card -->
+          <div class="bg-neutral/50 border border-border rounded-2xl p-6">
+            <h3 class="text-text font-bold text-lg mb-6">Review Summary</h3>
+            <div class="space-y-4">
+              <div class="flex justify-between items-center pb-4 border-b border-border/50">
+                <span class="text-slate-400 text-sm">Score</span>
+                <span class="text-primary font-bold text-2xl">{d.score}/10</span>
+              </div>
+              <div class="flex justify-between items-center pb-4 border-b border-border/50">
+                <span class="text-slate-400 text-sm">Price</span>
+                <span class="text-text font-bold">{d.price || 'N/A'}</span>
+              </div>
+              <div class="flex justify-between items-center pb-4 border-b border-border/50">
+                <span class="text-slate-400 text-sm">Platform</span>
+                <span class="text-text font-bold uppercase">{d.platform || 'N/A'}</span>
+              </div>
+              <div class="flex justify-between items-center pb-4 border-b border-border/50">
+                <span class="text-slate-400 text-sm">Type</span>
+                <span class="text-text font-bold capitalize">{d.eaType?.replace('-', ' ') || 'N/A'}</span>
+              </div>
+              {d.winRate && (
+                <div class="flex justify-between items-center pb-4 border-b border-border/50">
+                  <span class="text-slate-400 text-sm">Win Rate</span>
+                  <span class="text-text font-bold">{d.winRate}%</span>
+                </div>
+              )}
+              {d.maxDrawdown && (
+                <div class="flex justify-between items-center pb-4 border-b border-border/50">
+                  <span class="text-slate-400 text-sm">Max Drawdown</span>
+                  <span class="text-text font-bold">{d.maxDrawdown}</span>
+                </div>
+              )}
+              {d.profitFactor && (
+                <div class="flex justify-between items-center pb-4 border-b border-border/50">
+                  <span class="text-slate-400 text-sm">Profit Factor</span>
+                  <span class="text-text font-bold">{d.profitFactor}</span>
+                </div>
+              )}
+              {d.sharpeRatio && (
+                <div class="flex justify-between items-center pb-4 border-b border-border/50">
+                  <span class="text-slate-400 text-sm">Sharpe Ratio</span>
+                  <span class="text-text font-bold">{d.sharpeRatio}</span>
+                </div>
+              )}
+              {d.monthlyReturn && (
+                <div class="flex justify-between items-center pb-4 border-b border-border/50">
+                  <span class="text-slate-400 text-sm">Monthly Return</span>
+                  <span class="text-green-500 font-bold">{d.monthlyReturn}</span>
+                </div>
+              )}
+              {d.minDeposit && (
+                <div class="flex justify-between items-center pb-4 border-b border-border/50">
+                  <span class="text-slate-400 text-sm">Min Deposit</span>
+                  <span class="text-text font-bold">{d.minDeposit}</span>
+                </div>
+              )}
+            </div>
+            {d.affiliateUrl && (
+              <a href={d.affiliateUrl} target="_blank" class="block w-full mt-6 bg-gradient-to-r from-primary to-primary-dark text-white font-bold py-4 rounded-xl text-center hover:scale-105 transition-transform shadow-lg shadow-primary/20">
+                Visit Official Site →
+              </a>
+            )}
+          </div>
+
+          <!-- Pros/Cons -->
+          <div class="bg-neutral/50 border border-border rounded-2xl p-6">
+            {d.pros && d.pros.length > 0 && (
+              <div class="mb-6">
+                <h4 class="text-green-500 font-bold text-sm uppercase tracking-widest mb-3">✅ Pros</h4>
+                <ul class="space-y-2">
+                  {d.pros.map(p => <li class="text-slate-400 text-sm flex items-start gap-2"><span class="text-green-500 mt-0.5">•</span> {p}</li>)}
+                </ul>
+              </div>
+            )}
+            {d.cons && d.cons.length > 0 && (
+              <div>
+                <h4 class="text-red-500 font-bold text-sm uppercase tracking-widest mb-3">❌ Cons</h4>
+                <ul class="space-y-2">
+                  {d.cons.map(c => <li class="text-slate-400 text-sm flex items-start gap-2"><span class="text-red-500 mt-0.5">•</span> {c}</li>)}
+                </ul>
+              </div>
+            )}
+          </div>
+
+          <!-- Similar EAs -->
+          {similarEAs.length > 0 && (
+            <div class="bg-neutral/50 border border-border rounded-2xl p-6">
+              <h3 class="text-text font-bold text-lg mb-4">Similar EAs</h3>
+              <div class="space-y-3">
+                {similarEAs.map(sim => (
+                  <a href={`/eas/${sim.id}/`} class="flex items-center gap-3 p-3 rounded-xl hover:bg-white/5 transition-colors">
+                    <img src={`/images/eas/${sim.id}.svg`} alt={sim.data.title} class="w-10 h-10 rounded-lg object-cover" onerror="this.src='/images/eas/default.svg'" />
+                    <div class="flex-1 min-w-0">
+                      <span class="block text-text font-bold text-sm truncate">{sim.data.title}</span>
+                      <span class="block text-slate-500 text-xs">{sim.data.score}/10</span>
+                    </div>
+                    <span class="text-primary text-sm">→</span>
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </aside>
     </div>
   </div>
 </BaseLayout>

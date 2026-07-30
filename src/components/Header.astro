@@ -1,66 +1,56 @@
----
-// Header.astro — Sticky navigation with mobile hamburger menu
-const navItems = [
-  { label: 'Home', href: '/' },
-  { label: 'All EAs', href: '/eas/' }
-,
-  { label: 'Blog', href: '/blog/' }
-];
----
+<header class="fixed top-0 left-0 right-0 z-50 border-b border-white/5 bg-dark/80 backdrop-blur-xl">
+  <div class="container mx-auto px-6">
+    <nav class="flex items-center justify-between h-16">
+      <!-- Logo -->
+      <a href="/" class="flex items-center gap-2 font-black text-xl text-text">
+        <span class="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-primary-dark flex items-center justify-center text-white text-xs font-bold">AI</span>
+        TraderEA
+      </a>
 
-<header class="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-white/10">
-  <div class="container flex items-center justify-between h-16">
-    <!-- Logo -->
-    <a href="/" class="flex items-center gap-2 font-bold text-xl text-text no-underline">
-      <span class="text-primary">AI</span>TradeArea
-    </a>
+      <!-- Desktop Nav -->
+      <div class="hidden lg:flex items-center gap-1">
+        <a href="/eas/" class="px-4 py-2 text-sm text-slate-400 hover:text-text rounded-lg hover:bg-white/5 transition-all">EAs</a>
+        <a href="/comparison/" class="px-4 py-2 text-sm text-slate-400 hover:text-text rounded-lg hover:bg-white/5 transition-all">Comparisons</a>
+        <a href="/best/" class="px-4 py-2 text-sm text-slate-400 hover:text-text rounded-lg hover:bg-white/5 transition-all">Best Of</a>
+        <a href="/prop-challenges/" class="px-4 py-2 text-sm text-slate-400 hover:text-text rounded-lg hover:bg-white/5 transition-all">Prop Challenges</a>
+        <a href="/blog/" class="px-4 py-2 text-sm text-slate-400 hover:text-text rounded-lg hover:bg-white/5 transition-all">Blog</a>
+        <a href="/about/" class="px-4 py-2 text-sm text-slate-400 hover:text-text rounded-lg hover:bg-white/5 transition-all">About</a>
+      </div>
 
-    <!-- Desktop Nav -->
-    <nav class="hidden md:flex items-center gap-6" aria-label="Main navigation">
-      {navItems.map((item) => (
-        <a
-          href={item.href}
-          class="text-sm font-medium text-muted hover:text-primary transition-colors"
-        >
-          {item.label}
+      <!-- CTA Button -->
+      <div class="flex items-center gap-4">
+        <a href="/eas/" class="hidden sm:inline-flex items-center gap-1.5 text-sm font-bold text-white bg-gradient-to-r from-primary to-primary-dark px-5 py-2 rounded-full hover:scale-105 transition-transform shadow-lg shadow-primary/20">
+          Find Your EA
+          <span class="text-base">→</span>
         </a>
-      ))}
+        
+        <!-- Mobile Menu Toggle -->
+        <button id="mobile-menu-btn" class="lg:hidden w-9 h-9 rounded-lg border border-border flex items-center justify-center text-slate-400 hover:text-text hover:bg-white/5 transition-all" aria-label="Toggle mobile menu">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+      </div>
     </nav>
-
-    <!-- Mobile Hamburger -->
-    <button
-      id="menu-toggle"
-      class="md:hidden p-2 text-text"
-      aria-label="Toggle menu"
-      aria-expanded="false"
-    >
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M4 6h16M4 12h16M4 18h16" />
-      </svg>
-    </button>
   </div>
 
-  <!-- Mobile Menu (hidden by default) -->
-  <div id="mobile-menu" class="hidden md:hidden border-t border-white/10 bg-[#0a0a0a]">
-    <nav class="container flex flex-col py-4 gap-3" aria-label="Mobile navigation">
-      {navItems.map((item) => (
-        <a
-          href={item.href}
-          class="text-sm font-medium text-muted hover:text-primary transition-colors py-1"
-        >
-          {item.label}
-        </a>
-      ))}
-    </nav>
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="hidden lg:hidden border-t border-white/5 bg-dark/95 backdrop-blur-xl">
+    <div class="container mx-auto px-6 py-4 space-y-1">
+      <a href="/eas/" class="block px-4 py-3 text-sm text-slate-400 hover:text-text rounded-lg hover:bg-white/5 transition-all">🤖 EA Reviews</a>
+      <a href="/comparison/" class="block px-4 py-3 text-sm text-slate-400 hover:text-text rounded-lg hover:bg-white/5 transition-all">⚖️ Comparisons</a>
+      <a href="/best/" class="block px-4 py-3 text-sm text-slate-400 hover:text-text rounded-lg hover:bg-white/5 transition-all">🏆 Best Of</a>
+      <a href="/prop-challenges/" class="block px-4 py-3 text-sm text-slate-400 hover:text-text rounded-lg hover:bg-white/5 transition-all">🏁 Prop Challenges</a>
+      <a href="/blog/" class="block px-4 py-3 text-sm text-slate-400 hover:text-text rounded-lg hover:bg-white/5 transition-all">📝 Blog</a>
+      <a href="/about/" class="block px-4 py-3 text-sm text-slate-400 hover:text-text rounded-lg hover:bg-white/5 transition-all">ℹ️ About</a>
+      <a href="/how-we-rate/" class="block px-4 py-3 text-sm text-slate-400 hover:text-text rounded-lg hover:bg-white/5 transition-all">📊 Methodology</a>
+    </div>
   </div>
 </header>
 
 <script>
-  const toggle = document.getElementById('menu-toggle');
-  const menu = document.getElementById('mobile-menu');
-  toggle?.addEventListener('click', () => {
-    const expanded = toggle.getAttribute('aria-expanded') === 'true';
-    toggle.setAttribute('aria-expanded', String(!expanded));
-    menu?.classList.toggle('hidden');
+  document.getElementById('mobile-menu-btn')?.addEventListener('click', () => {
+    const menu = document.getElementById('mobile-menu');
+    if (menu) {
+      menu.classList.toggle('hidden');
+    }
   });
 </script>

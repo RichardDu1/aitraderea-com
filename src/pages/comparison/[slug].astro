@@ -1,0 +1,137 @@
+---
+import { getCollection, render } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+export async function getStaticPaths() {
+  const items = await getCollection("comparisons");
+  return items.map(item => ({
+    params: { slug: item.id },
+    props: { item },
+  }));
+}
+
+const { item } = Astro.props;
+const { Content } = await render(item);
+const d = item.data;
+
+const allItems = await getCollection("eas");
+const ea1 = allItems.find(i => i.id === d.ea1);
+const ea2 = allItems.find(i => i.id === d.ea2);
+const ea3 = d.ea3 ? allItems.find(i => i.id === d.ea3) : null;
+---
+
+<BaseLayout title={`${d.title} | Comparison | AI TraderEA`} description={d.description} canonical={`https://aitraderea.com/comparison/${item.id}/`}>
+  <div class="container mx-auto px-6 py-20">
+    <nav class="mb-10 text-sm text-slate-500 font-medium">
+      <a href="/comparison/" class="hover:text-primary transition-colors">Comparisons</a>
+      <span class="mx-2">/</span>
+      <span class="text-text">{d.title}</span>
+    </nav>
+
+    <header class="mb-12">
+      <h1 class="text-3xl md:text-5xl font-black text-text mb-4">{d.title}</h1>
+      <p class="text-slate-400 text-lg">{d.description}</p>
+    </header>
+
+    <!-- Comparison Table -->
+    <div class="bg-neutral/50 border border-border rounded-2xl overflow-hidden mb-10">
+      <table class="w-full border-collapse">
+        <thead>
+          <tr class="bg-white/5">
+            <th class="text-left py-4 px-6 text-slate-400 font-semibold text-sm">Metric</th>
+            {ea1 && <th class="text-center py-4 px-6 text-text font-bold">{ea1.data.title} {d.winner === d.ea1 ? '🏆' : ''}</th>}
+            {ea2 && <th class="text-center py-4 px-6 text-text font-bold">{ea2.data.title} {d.winner === d.ea2 ? '🏆' : ''}</th>}
+            {ea3 && <th class="text-center py-4 px-6 text-text font-bold">{ea3.data.title}</th>}
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="border-t border-border/50">
+            <td class="py-4 px-6 text-slate-400 font-medium">Score</td>
+            {ea1 && <td class="text-center py-4 px-6 text-primary font-bold text-xl">{ea1.data.score}/10</td>}
+            {ea2 && <td class="text-center py-4 px-6 text-primary font-bold text-xl">{ea2.data.score}/10</td>}
+            {ea3 && <td class="text-center py-4 px-6 text-primary font-bold text-xl">{ea3.data.score}/10</td>}
+          </tr>
+          <tr class="border-t border-border/50">
+            <td class="py-4 px-6 text-slate-400 font-medium">Price</td>
+            {ea1 && <td class="text-center py-4 px-6 text-text font-bold">{ea1.data.price || '-'}</td>}
+            {ea2 && <td class="text-center py-4 px-6 text-text font-bold">{ea2.data.price || '-'}</td>}
+            {ea3 && <td class="text-center py-4 px-6 text-text font-bold">{ea3.data.price || '-'}</td>}
+          </tr>
+          <tr class="border-t border-border/50">
+            <td class="py-4 px-6 text-slate-400 font-medium">Type</td>
+            {ea1 && <td class="text-center py-4 px-6 text-text font-bold capitalize">{ea1.data.eaType?.replace('-', ' ') || '-'}</td>}
+            {ea2 && <td class="text-center py-4 px-6 text-text font-bold capitalize">{ea2.data.eaType?.replace('-', ' ') || '-'}</td>}
+            {ea3 && <td class="text-center py-4 px-6 text-text font-bold capitalize">{ea3.data.eaType?.replace('-', ' ') || '-'}</td>}
+          </tr>
+          <tr class="border-t border-border/50">
+            <td class="py-4 px-6 text-slate-400 font-medium">Win Rate</td>
+            {ea1 && <td class="text-center py-4 px-6 text-text font-bold">{ea1.data.winRate || '-'}%</td>}
+            {ea2 && <td class="text-center py-4 px-6 text-text font-bold">{ea2.data.winRate || '-'}%</td>}
+            {ea3 && <td class="text-center py-4 px-6 text-text font-bold">{ea3.data.winRate || '-'}%</td>}
+          </tr>
+          <tr class="border-t border-border/50">
+            <td class="py-4 px-6 text-slate-400 font-medium">Max Drawdown</td>
+            {ea1 && <td class="text-center py-4 px-6 text-text font-bold">{ea1.data.maxDrawdown || '-'}</td>}
+            {ea2 && <td class="text-center py-4 px-6 text-text font-bold">{ea2.data.maxDrawdown || '-'}</td>}
+            {ea3 && <td class="text-center py-4 px-6 text-text font-bold">{ea3.data.maxDrawdown || '-'}</td>}
+          </tr>
+          <tr class="border-t border-border/50">
+            <td class="py-4 px-6 text-slate-400 font-medium">Profit Factor</td>
+            {ea1 && <td class="text-center py-4 px-6 text-text font-bold">{ea1.data.profitFactor || '-'}</td>}
+            {ea2 && <td class="text-center py-4 px-6 text-text font-bold">{ea2.data.profitFactor || '-'}</td>}
+            {ea3 && <td class="text-center py-4 px-6 text-text font-bold">{ea3.data.profitFactor || '-'}</td>}
+          </tr>
+          <tr class="border-t border-border/50">
+            <td class="py-4 px-6 text-slate-400 font-medium">Sharpe Ratio</td>
+            {ea1 && <td class="text-center py-4 px-6 text-text font-bold">{ea1.data.sharpeRatio || '-'}</td>}
+            {ea2 && <td class="text-center py-4 px-6 text-text font-bold">{ea2.data.sharpeRatio || '-'}</td>}
+            {ea3 && <td class="text-center py-4 px-6 text-text font-bold">{ea3.data.sharpeRatio || '-'}</td>}
+          </tr>
+          <tr class="border-t border-border/50">
+            <td class="py-4 px-6 text-slate-400 font-medium">Monthly Return</td>
+            {ea1 && <td class="text-center py-4 px-6 text-green-500 font-bold">{ea1.data.monthlyReturn || '-'}</td>}
+            {ea2 && <td class="text-center py-4 px-6 text-green-500 font-bold">{ea2.data.monthlyReturn || '-'}</td>}
+            {ea3 && <td class="text-center py-4 px-6 text-green-500 font-bold">{ea3.data.monthlyReturn || '-'}</td>}
+          </tr>
+          <tr class="border-t border-border/50">
+            <td class="py-4 px-6 text-slate-400 font-medium">Platform</td>
+            {ea1 && <td class="text-center py-4 px-6 text-text font-bold uppercase">{ea1.data.platform || '-'}</td>}
+            {ea2 && <td class="text-center py-4 px-6 text-text font-bold uppercase">{ea2.data.platform || '-'}</td>}
+            {ea3 && <td class="text-center py-4 px-6 text-text font-bold uppercase">{ea3.data.platform || '-'}</td>}
+          </tr>
+          <tr class="border-t border-border/50">
+            <td class="py-4 px-6 text-slate-400 font-medium">Min Deposit</td>
+            {ea1 && <td class="text-center py-4 px-6 text-text font-bold">{ea1.data.minDeposit || '-'}</td>}
+            {ea2 && <td class="text-center py-4 px-6 text-text font-bold">{ea2.data.minDeposit || '-'}</td>}
+            {ea3 && <td class="text-center py-4 px-6 text-text font-bold">{ea3.data.minDeposit || '-'}</td>}
+          </tr>
+          <tr class="border-t border-border/50">
+            <td class="py-4 px-6 text-slate-400 font-medium">Pairs</td>
+            {ea1 && <td class="text-center py-4 px-6 text-slate-400 text-sm">{ea1.data.tradingPairs?.join(', ') || '-'}</td>}
+            {ea2 && <td class="text-center py-4 px-6 text-slate-400 text-sm">{ea2.data.tradingPairs?.join(', ') || '-'}</td>}
+            {ea3 && <td class="text-center py-4 px-6 text-slate-400 text-sm">{ea3.data.tradingPairs?.join(', ') || '-'}</td>}
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Verdict -->
+    {d.verdict && (
+      <div class="bg-gradient-to-br from-primary/5 to-primary/10 border border-primary/20 rounded-2xl p-8 mb-10">
+        <h2 class="text-xl font-bold text-text mb-3">Verdict</h2>
+        <p class="text-slate-400 text-lg">{d.verdict}</p>
+      </div>
+    )}
+
+    <!-- Full Review Links -->
+    <div class="flex flex-wrap gap-4 mb-10">
+      {ea1 && <a href={`/eas/${ea1.id}/`} class="bg-primary/10 text-primary font-bold px-6 py-3 rounded-full hover:bg-primary hover:text-white transition-all">Read {ea1.data.title} Review →</a>}
+      {ea2 && <a href={`/eas/${ea2.id}/`} class="bg-primary/10 text-primary font-bold px-6 py-3 rounded-full hover:bg-primary hover:text-white transition-all">Read {ea2.data.title} Review →</a>}
+    </div>
+
+    <!-- Content -->
+    <article class="prose prose-invert prose-lg max-w-none prose-headings:text-text prose-p:text-slate-400">
+      <Content />
+    </article>
+  </div>
+</BaseLayout>

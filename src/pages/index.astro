@@ -3,56 +3,309 @@ import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
 const allItems = await getCollection("eas");
-const topItems = allItems.slice(0, 3);
+const featuredItems = allItems.filter(item => item.data.featured).sort((a, b) => (b.data.score || 0) - (a.data.score || 0));
+const topThree = featuredItems.slice(0, 3);
+const recentItems = allItems.sort((a, b) => {
+  const da = a.data.publishedAt ? new Date(a.data.publishedAt).getTime() : 0;
+  const db = b.data.publishedAt ? new Date(b.data.publishedAt).getTime() : 0;
+  return db - da;
+}).slice(0, 6);
 
-const pageTitle = "AITrader EA";
-const pageDescription = "Unbiased reviews of the most profitable algorithmic trading systems and Expert Advisors in 2026.";
+const categories = [
+  { slug: 'scalper', label: 'Scalpers', icon: '⚡', count: allItems.filter(i => i.data.eaType === 'scalper').length, desc: 'Fast, high-frequency trading for quick profits' },
+  { slug: 'grid', label: 'Grid', icon: '🔲', count: allItems.filter(i => i.data.eaType === 'grid').length, desc: 'Grid trading strategies for ranging markets' },
+  { slug: 'trend', label: 'Trend', icon: '📈', count: allItems.filter(i => i.data.eaType === 'trend').length, desc: 'Follow the trend with proven systems' },
+  { slug: 'ai-ml', label: 'AI/ML', icon: '🧠', count: allItems.filter(i => i.data.eaType === 'ai-ml').length, desc: 'Neural networks & machine learning powered' },
+  { slug: 'prop-challenge', label: 'Prop Firm', icon: '🏆', count: allItems.filter(i => i.data.eaType === 'prop-challenge').length, desc: 'EAs designed to pass FTMO challenges' },
+  { slug: 'multi-strategy', label: 'Multi-Strategy', icon: '🔄', count: allItems.filter(i => i.data.eaType === 'multi-strategy').length, desc: 'Adaptive strategies for any market' },
+];
+
+const getVerdictClass = (label) => {
+  if (label === 'buy') return 'verdict-buy';
+  if (label === 'wait') return 'verdict-wait';
+  return 'verdict-skip';
+};
+
+const getVerdictLabel = (label) => {
+  if (label === 'buy') return '✅ BUY';
+  if (label === 'wait') return '⏳ WAIT';
+  return '❌ SKIP';
+};
+const pageTitle = "AI Trader EA — AI-Powered MT4/MT5 Expert Advisor Reviews";
+const pageDescription = "Unbiased, data-driven reviews of MT4/MT5 Expert Advisors. AI-powered analysis, verified backtest data, side-by-side comparison tools, and prop firm challenge focus.";
 ---
 
 <BaseLayout title={pageTitle} description={pageDescription} canonical="https://aitraderea.com/" schema={{ type: "WebSite", data: { description: pageDescription } }}>
-  <header class="bg-surface text-text py-32 relative overflow-hidden flex flex-col items-center text-center">
-    <div class="px-4 py-1.5 rounded-full border border-border bg-neutral text-sm font-bold mb-8 backdrop-blur-md text-green-500">
-      🔥 2026 TOP LEADERBOARD IS LIVE
-    </div>
-    <h1 class="text-4xl md:text-6xl font-bold text-text mb-6 tracking-tight">AITrader EA</h1>
-    <p class="text-xl md:text-2xl text-muted max-w-3xl mb-12 font-medium">
-      Unbiased reviews of the most profitable algorithmic trading systems and Expert Advisors in 2026.
-    </p>
-    <div class="flex gap-4">
-      <a href="/eas/" class="bg-gradient-to-r from-green-500 to-emerald-400 text-white font-bold px-10 py-5 rounded-full hover:scale-105 transition-transform shadow-2xl">
-        View the Top List
-      </a>
-    </div>
-  </header>
 
-  <section class="container max-w-6xl mx-auto px-6 py-24">
-    <div class="text-center mb-16">
-      <h2 class="text-3xl md:text-5xl font-black text-text mb-4">Top 3 Recommendations</h2>
-      <p class="text-muted text-lg">The Ultimate Algorithm & EA Trading Hub</p>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-      {topItems.length > 0 ? topItems.map((item, idx) => (
-        <a href={`/eas/${item.id}`} class="bg-neutral rounded-2xl border border-border p-8 hover:border-primary transition-colors group relative overflow-hidden shadow-xl">
-          <div class="absolute -right-10 -top-10 text-[150px] font-black text-muted opacity-10 group-hover:opacity-20 transition-colors z-0">
-            {idx + 1}
-          </div>
-          <div class="relative z-10">
-            <span class="inline-block bg-primary text-white text-xs font-black uppercase tracking-widest px-3 py-1 rounded-full mb-4">Featured</span>
-            <h3 class="text-3xl font-black text-text mb-2">{item.data.title || item.id}</h3>
-            <p class="text-muted leading-relaxed mb-6">{(item.data.description || "").substring(0, 100)}...</p>
-            <div class="text-green-500 font-bold group-hover:translate-x-2 transition-transform">Read Full Review →</div>
-          </div>
+  <!-- Hero Section -->
+  <section class="relative overflow-hidden pt-32 pb-24">
+    <div class="container mx-auto px-6 text-center relative z-10">
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-slate-300 mb-8 backdrop-blur-sm">
+        <span class="relative flex h-2 w-2">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+        </span>
+        AI-Powered Analysis • Updated Daily • 100% Independent
+      </div>
+      <h1 class="text-5xl md:text-7xl lg:text-8xl font-black text-text mb-6 tracking-tight leading-tight">
+        AI-Powered<br />
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary-light">EA Reviews.</span><br />
+        <span class="text-slate-400">Real Data. No BS.</span>
+      </h1>
+      <p class="text-lg md:text-xl text-slate-400 max-w-3xl mx-auto mb-12 font-light leading-relaxed">
+        We test, verify, and rank MT4/MT5 Expert Advisors with AI-powered analysis, real backtest data, 
+        and side-by-side comparisons — so you never buy a curve-fitted EA again.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="/eas/" class="bg-gradient-to-r from-primary to-primary-dark text-white font-bold px-10 py-5 rounded-full hover:scale-105 transition-transform shadow-2xl shadow-primary/30 text-lg">
+          Browse All EAs
         </a>
-      )) : (
-        <div class="col-span-3 text-center py-20 border-2 border-dashed border-border rounded-2xl text-muted font-bold">Running benchmarks...</div>
-      )}
+        <a href="/comparison/" class="text-text font-bold px-10 py-5 rounded-full border border-border transition-colors hover:bg-neutral/50 text-lg">
+          Compare EAs
+        </a>
+      </div>
     </div>
-    
-    <div class="mt-16 text-center">
-      <a href="/eas/" class="inline-flex items-center gap-2 text-text font-bold px-8 py-4 rounded-full border border-border transition-colors hover:bg-neutral">
-        See All Reviews
+  </section>
+
+  <!-- Featured Comparison: Top 3 Side-by-Side -->
+  {topThree.length >= 2 && (
+    <section class="container max-w-6xl mx-auto px-6 py-16">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl md:text-5xl font-black text-text mb-4">Top 3 EAs: Side-by-Side</h2>
+        <p class="text-slate-400 text-lg">Compare the highest-rated Expert Advisors across key metrics</p>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full border-collapse">
+          <thead>
+            <tr class="border-b border-border">
+              <th class="text-left py-4 px-6 text-slate-400 font-semibold text-sm">Metric</th>
+              {topThree.map(item => (
+                <th class="text-center py-4 px-6 min-w-[200px]">
+                  <span class="text-text font-bold text-base">{item.data.title}</span>
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="border-b border-border/50">
+              <td class="py-4 px-6 text-slate-400 font-medium">Score</td>
+              {topThree.map(item => (
+                <td class="text-center py-4 px-6">
+                  <span class="inline-flex items-center gap-1 text-lg font-bold text-primary">{item.data.score}/10</span>
+                </td>
+              ))}
+            </tr>
+            <tr class="border-b border-border/50">
+              <td class="py-4 px-6 text-slate-400 font-medium">AI Verdict</td>
+              {topThree.map(item => (
+                <td class="text-center py-4 px-6">
+                  <span class="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase {getVerdictClass(item.data.verdictLabel)}">
+                    {getVerdictLabel(item.data.verdictLabel)}
+                  </span>
+                </td>
+              ))}
+            </tr>
+            <tr class="border-b border-border/50">
+              <td class="py-4 px-6 text-slate-400 font-medium">Win Rate</td>
+              {topThree.map(item => (
+                <td class="text-center py-4 px-6">
+                  <span class="text-text font-bold">{item.data.winRate || 'N/A'}%</span>
+                </td>
+              ))}
+            </tr>
+            <tr class="border-b border-border/50">
+              <td class="py-4 px-6 text-slate-400 font-medium">Max Drawdown</td>
+              {topThree.map(item => (
+                <td class="text-center py-4 px-6">
+                  <span class="text-text font-bold">{item.data.maxDrawdown || 'N/A'}</span>
+                </td>
+              ))}
+            </tr>
+            <tr class="border-b border-border/50">
+              <td class="py-4 px-6 text-slate-400 font-medium">Profit Factor</td>
+              {topThree.map(item => (
+                <td class="text-center py-4 px-6">
+                  <span class="text-text font-bold">{item.data.profitFactor || 'N/A'}</span>
+                </td>
+              ))}
+            </tr>
+            <tr class="border-b border-border/50">
+              <td class="py-4 px-6 text-slate-400 font-medium">Monthly Return</td>
+              {topThree.map(item => (
+                <td class="text-center py-4 px-6">
+                  <span class="text-green-500 font-bold">{item.data.monthlyReturn || 'N/A'}</span>
+                </td>
+              ))}
+            </tr>
+            <tr>
+              <td class="py-4 px-6"></td>
+              {topThree.map(item => (
+                <td class="text-center py-4 px-6">
+                  <a href={`/eas/${item.id}/`} class="inline-block bg-primary/10 text-primary font-bold px-6 py-2 rounded-full hover:bg-primary hover:text-white transition-all text-sm">
+                    Full Review →
+                  </a>
+                </td>
+              ))}
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  )}
+
+  <!-- How We Test Section -->
+  <section class="container max-w-6xl mx-auto px-6 py-20">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl md:text-5xl font-black text-text mb-4">How We Test</h2>
+      <p class="text-slate-400 text-lg max-w-2xl mx-auto">Every EA goes through our rigorous 5-step testing methodology before we assign a score</p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-5 gap-6">
+      <div class="bg-neutral/50 border border-border rounded-2xl p-6 text-center hover:border-primary/30 transition-colors">
+        <div class="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xl font-bold mx-auto mb-4">1</div>
+        <h3 class="text-text font-bold mb-2">Backtest Analysis</h3>
+        <p class="text-slate-400 text-sm">We run our own independent backtests with real tick data, not the cherry-picked results sellers show.</p>
+      </div>
+      <div class="bg-neutral/50 border border-border rounded-2xl p-6 text-center hover:border-primary/30 transition-colors">
+        <div class="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xl font-bold mx-auto mb-4">2</div>
+        <h3 class="text-text font-bold mb-2">Live Verification</h3>
+        <p class="text-slate-400 text-sm">We cross-reference with Myfxbook live results to measure the gap between backtest and reality.</p>
+      </div>
+      <div class="bg-neutral/50 border border-border rounded-2xl p-6 text-center hover:border-primary/30 transition-colors">
+        <div class="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xl font-bold mx-auto mb-4">3</div>
+        <h3 class="text-text font-bold mb-2">AI Risk Analysis</h3>
+        <p class="text-slate-400 text-sm">Our AI evaluates Sharpe ratio, drawdown consistency, and Monte Carlo simulation results.</p>
+      </div>
+      <div class="bg-neutral/50 border border-border rounded-2xl p-6 text-center hover:border-primary/30 transition-colors">
+        <div class="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xl font-bold mx-auto mb-4">4</div>
+        <h3 class="text-text font-bold mb-2">Curve-Fit Check</h3>
+        <p class="text-slate-400 text-sm">We detect over-optimization by comparing performance across different market regimes.</p>
+      </div>
+      <div class="bg-neutral/50 border border-border rounded-2xl p-6 text-center hover:border-primary/30 transition-colors">
+        <div class="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xl font-bold mx-auto mb-4">5</div>
+        <h3 class="text-text font-bold mb-2">Final Verdict</h3>
+        <p class="text-slate-400 text-sm">Our AI generates a BUY/WAIT/SKIP verdict based on all data points combined.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Category Navigation -->
+  <section class="container max-w-6xl mx-auto px-6 py-20">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl md:text-5xl font-black text-text mb-4">Browse by Category</h2>
+      <p class="text-slate-400 text-lg">Find the right EA type for your trading style</p>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {categories.filter(c => c.count > 0).map(cat => (
+        <a href={`/eas/?type=${cat.slug}`} class="group bg-neutral/50 border border-border rounded-2xl p-6 hover:border-primary/30 transition-all hover:-translate-y-1">
+          <div class="flex items-center gap-4 mb-3">
+            <span class="text-3xl">{cat.icon}</span>
+            <div>
+              <h3 class="text-text font-bold text-lg">{cat.label}</h3>
+              <span class="text-slate-500 text-sm">{cat.count} EAs</span>
+            </div>
+          </div>
+          <p class="text-slate-400 text-sm">{cat.desc}</p>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- Recent Reviews -->
+  <section class="container max-w-6xl mx-auto px-6 py-20">
+    <div class="flex items-center justify-between mb-12">
+      <div>
+        <h2 class="text-3xl md:text-5xl font-black text-text mb-2">Latest Reviews</h2>
+        <p class="text-slate-400">Recently updated EA reviews with fresh data</p>
+      </div>
+      <a href="/eas/" class="hidden sm:inline-flex items-center gap-2 text-primary font-bold hover:underline">
+        View All →
       </a>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {recentItems.map(item => {
+        const vLabel = item.data.verdictLabel;
+        const vClass = vLabel === 'buy' ? 'bg-green-500/10 text-green-500' : vLabel === 'wait' ? 'bg-yellow-500/10 text-yellow-500' : 'bg-red-500/10 text-red-500';
+        const vText = vLabel === 'buy' ? 'BUY' : vLabel === 'wait' ? 'WAIT' : 'SKIP';
+        return (
+          <a href={`/eas/${item.id}/`} class="group bg-neutral/50 border border-border rounded-2xl overflow-hidden hover:border-primary/30 transition-all hover:-translate-y-1">
+            <div class="p-6">
+              <div class="flex items-start justify-between mb-4">
+                <span class="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase {vClass}">{vText}</span>
+                <span class="text-primary font-bold text-lg">{item.data.score}/10</span>
+              </div>
+              <h3 class="text-text font-bold text-lg mb-2 group-hover:text-primary transition-colors">{item.data.title}</h3>
+              <p class="text-slate-400 text-sm mb-4 line-clamp-2">{(item.data.description || '').substring(0, 120)}...</p>
+              <div class="grid grid-cols-2 gap-3 text-xs">
+                {item.data.winRate && <div><span class="text-slate-500">Win Rate</span><br /><span class="text-text font-bold">{item.data.winRate}%</span></div>}
+                {item.data.maxDrawdown && <div><span class="text-slate-500">Drawdown</span><br /><span class="text-text font-bold">{item.data.maxDrawdown}</span></div>}
+                {item.data.profitFactor && <div><span class="text-slate-500">Profit Factor</span><br /><span class="text-text font-bold">{item.data.profitFactor}</span></div>}
+                {item.data.monthlyReturn && <div><span class="text-slate-500">Monthly</span><br /><span class="text-green-500 font-bold">{item.data.monthlyReturn}</span></div>}
+              </div>
+            </div>
+          </a>
+        );
+      })}
+    </div>
+    <div class="mt-12 text-center sm:hidden">
+      <a href="/eas/" class="inline-flex items-center gap-2 text-primary font-bold px-8 py-4 rounded-full border border-primary/30 hover:bg-primary/10 transition-colors">
+        View All Reviews →
+      </a>
+    </div>
+  </section>
+
+  <!-- Why AITraderEA -->
+  <section class="container max-w-6xl mx-auto px-6 py-20">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl md:text-5xl font-black text-text mb-4">Why AITraderEA?</h2>
+      <p class="text-slate-400 text-lg">What makes us different from every other EA review site</p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="bg-neutral/50 border border-border rounded-2xl p-8">
+        <div class="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center text-2xl font-black mb-6">🤖</div>
+        <h3 class="text-xl font-bold text-text mb-3">AI-Powered Verdicts</h3>
+        <p class="text-slate-400 leading-relaxed text-sm">Every EA gets an AI-generated analysis that detects curve-fitting, evaluates risk-adjusted returns, and generates a BUY/WAIT/SKIP verdict.</p>
+      </div>
+      <div class="bg-neutral/50 border border-border rounded-2xl p-8">
+        <div class="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center text-2xl font-black mb-6">📊</div>
+        <h3 class="text-xl font-bold text-text mb-3">Real Data, Not Hype</h3>
+        <p class="text-slate-400 leading-relaxed text-sm">We show backtest vs. live results side-by-side. If an EA's backtest looks too good to be true, we flag it. No cherry-picked numbers.</p>
+      </div>
+      <div class="bg-neutral/50 border border-border rounded-2xl p-8">
+        <div class="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center text-2xl font-black mb-6">⚖️</div>
+        <h3 class="text-xl font-bold text-text mb-3">Side-by-Side Comparisons</h3>
+        <p class="text-slate-400 leading-relaxed text-sm">Compare any 2 EAs across 15+ dimensions. No other site lets you do this. Make informed decisions, not impulse buys.</p>
+      </div>
+      <div class="bg-neutral/50 border border-border rounded-2xl p-8">
+        <div class="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center text-2xl font-black mb-6">🏆</div>
+        <h3 class="text-xl font-bold text-text mb-3">Prop Firm Focus</h3>
+        <p class="text-slate-400 leading-relaxed text-sm">We review EAs specifically for FTMO and prop firm challenges. Max daily loss and drawdown are our primary metrics, not just profit.</p>
+      </div>
+      <div class="bg-neutral/50 border border-border rounded-2xl p-8">
+        <div class="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center text-2xl font-black mb-6">🔍</div>
+        <h3 class="text-xl font-bold text-text mb-3">Transparent Methodology</h3>
+        <p class="text-slate-400 leading-relaxed text-sm">Every score is explained. Every metric is defined. We hide nothing. If we earn affiliate commission, we tell you. No dark patterns.</p>
+      </div>
+      <div class="bg-neutral/50 border border-border rounded-2xl p-8">
+        <div class="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center text-2xl font-black mb-6">📱</div>
+        <h3 class="text-xl font-bold text-text mb-3">Modern Design</h3>
+        <p class="text-slate-400 leading-relaxed text-sm">Fast, responsive, dark-mode-first. No clunky 2012-era layouts. Built with Astro for lightning-fast page loads.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="container max-w-4xl mx-auto px-6 py-20 text-center">
+    <div class="bg-gradient-to-br from-primary/5 to-primary/10 border border-primary/20 rounded-3xl p-12">
+      <h2 class="text-3xl md:text-5xl font-black text-text mb-6">Stop Guessing. Start Trading Smarter.</h2>
+      <p class="text-slate-400 text-lg mb-10 max-w-2xl mx-auto">Browse our full leaderboard of reviewed Expert Advisors and find the one that fits your risk profile and capital.</p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="/eas/" class="bg-gradient-to-r from-primary to-primary-dark text-white font-bold px-10 py-5 rounded-full hover:scale-105 transition-transform shadow-2xl shadow-primary/30">
+          Explore All Expert Advisors
+        </a>
+        <a href="/how-we-rate/" class="text-text font-bold px-10 py-5 rounded-full border border-border transition-colors hover:bg-neutral/50">
+          See Our Methodology
+        </a>
+      </div>
     </div>
   </section>
 </BaseLayout>
